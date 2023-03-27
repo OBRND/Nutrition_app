@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "153790567197",
+    "project_id": "gebeta-nutrition",
+    "storage_bucket": "gebeta-nutrition.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153790567197:android:319fe3ea4c2b8e4b5887f4",
+        "android_client_info": {
+          "package_name": "com.example.gebeta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153790567197-3iqdf2tdpcpiv89c7jq6i4oh2amjrkrc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0dofFLWcP1Je-uspURxzAA9P_MATXJj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153790567197-3iqdf2tdpcpiv89c7jq6i4oh2amjrkrc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
