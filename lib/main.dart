@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gebeta/Model/User.dart';
+import 'package:gebeta/Screens/Place_order/placeOrderPages.dart';
+import 'package:gebeta/Screens/bottomNav.dart';
 import 'package:gebeta/Services/Auth.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +27,9 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           // home: Home(),
           home: wrapper(),
+          routes: {
+            '/place': (context) => BottomTab(index: 1),
+           },
         )
     );
   }

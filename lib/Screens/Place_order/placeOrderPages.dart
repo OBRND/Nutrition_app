@@ -1,13 +1,24 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:gebeta/Model/Payment.dart';
+import 'package:gebeta/Model/User.dart';
+import 'package:gebeta/Screens/bottomNav.dart';
+import 'package:gebeta/Services/Database.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:chapasdk/chapa_payment%20initializer.dart';
 import 'package:flutter/material.dart';
 import 'package:gebeta/Model/Decorations.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class selectFood extends StatefulWidget {
-  const selectFood({Key? key}) : super(key: key);
+class PlaceOrder extends StatefulWidget {
+  const PlaceOrder({Key? key}) : super(key: key);
 
   @override
-  State<selectFood> createState() => _selectFoodState();
+  State<PlaceOrder> createState() => _PlaceOrderState();
 }
 List<int> _selectedItems = [];
 class Plate {
@@ -20,13 +31,40 @@ class Plate {
   });
 }
  List<Plate> _food = [
-Plate(id: 1, name: "Shiro"),
-Plate(id: 2, name: "Meser"),
-Plate(id: 3, name: "Salad"),
-Plate(id: 4, name: "Sega wet"),
-Plate(id: 5, name: "Gomen"),
-Plate(id: 6, name: "Tebs"),
-Plate(id: 7, name: "Pasta"),
+Plate(id: 1, name: "ምስር"),
+Plate(id: 2, name: "ድንች"),
+Plate(id: 3, name: "ስጋ"),
+Plate(id: 4, name: "ጤፍ"),
+Plate(id: 5, name: "ማር"),
+Plate(id: 6, name: "ሰላጣ"),
+Plate(id: 7, name: "ብሮኮሊ"),
+Plate(id: 8, name: "አበባ ጐመን"),
+Plate(id: 9, name: "ካሮት"),
+Plate(id: 10, name: "ቲማቲም"),
+Plate(id: 11, name: "ቱና"),
+Plate(id: 12, name: "ዝኩኒ"),
+Plate(id: 13, name: "አጃ"),
+Plate(id: 14, name: "የገብስ ዳቦ"),
+Plate(id: 15, name: "ሱፍ"),
+Plate(id: 16, name: "መኮረኒ"),
+Plate(id: 17, name: "ፓስታ"),
+Plate(id: 18, name: "ሩዝ"),
+Plate(id: 19, name: "ዶሮ"),
+Plate(id: 20, name: "አቮካዶ"),
+Plate(id: 21, name: "ኩከምበር"),
+Plate(id: 22, name: "እንቁላል"),
+Plate(id: 23, name: "ወተት"),
+Plate(id: 24, name: "እርጐ"),
+Plate(id: 25, name: "ጐመን"),
+Plate(id: 26, name: "አሳ"),
+Plate(id: 27, name: "እንጆሪ"),
+Plate(id: 28, name: "ሽሮ"),
+Plate(id: 29, name: "አፕል"),
+Plate(id: 30, name: "እንጀራ"),
+Plate(id: 31, name: "አተር ክክ"),
+Plate(id: 32, name: "ሽንኩርት"),
+Plate(id: 33, name: "በርበሬ"),
+Plate(id: 34, name: "አፕል"),
 ];
 final _items = _food
     .map((food) => MultiSelectItem<Plate>(food, food.name))
@@ -34,7 +72,7 @@ final _items = _food
 
 enum Packages {basic,standard,premium}
 
-class _selectFoodState extends State<selectFood> {
+class _PlaceOrderState extends State<PlaceOrder> {
 
   List _selectedPlate = [];
   int page = 0;
@@ -42,7 +80,11 @@ class _selectFoodState extends State<selectFood> {
   List _choicestips = ['Get lean','Optimize your diet', 'Build muscle'];
   int _choiceIndex = 1;
   String alergies = '';
-  Packages? _selected = Packages.basic;
+  Packages? _selectedContract = Packages.basic;
+  bool paid = false;
+  bool taped = false;
+  late Payment txnDetails;
+  String txRef = '';
 
 
   @override
@@ -106,6 +148,11 @@ class _selectFoodState extends State<selectFood> {
                         title: Text("Plate"),
                         items: _items,
                         onConfirm: (values) {
+                          for(int i = 0; i < _selectedPlate.length; i++ ){
+                            _selectedPlate[0];
+                            print(_selectedPlate[i].name);
+                          }
+                          print(values);
                           setState(() {
                             _selectedPlate = values;
                           });
@@ -204,10 +251,10 @@ class _selectFoodState extends State<selectFood> {
                   scale: 1.5,
                   child: Radio(
                     value: Packages.basic,
-                    groupValue: _selected,
+                    groupValue: _selectedContract,
                     onChanged: (Packages? value) {
                       setState(() {
-                        _selected = value;
+                        _selectedContract = value;
                       });
                     },
                   ),
@@ -257,10 +304,10 @@ class _selectFoodState extends State<selectFood> {
                   scale: 1.5,
                   child: Radio(
                     value: Packages.standard,
-                    groupValue: _selected,
+                    groupValue: _selectedContract,
                     onChanged: (Packages? value) {
                       setState(() {
-                        _selected = value;
+                        _selectedContract = value;
                       });
                     },
                   ),
@@ -310,10 +357,10 @@ class _selectFoodState extends State<selectFood> {
                   scale: 1.5,
                   child: Radio(
                     value: Packages.premium,
-                    groupValue: _selected,
+                    groupValue: _selectedContract,
                     onChanged: (Packages? value) {
                       setState(() {
-                        _selected = value;
+                        _selectedContract = value;
                       });
                     },
                   ),
@@ -325,29 +372,112 @@ class _selectFoodState extends State<selectFood> {
 
       ) :
       Center(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Pay with Chapa', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),),
-              ElevatedButton(onPressed: (){
-                Paychapa();
-              }, child: Text('Pay'))
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Payment', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),),
+            SizedBox(height: MediaQuery.of(context).size.height * .15),
+            TextButton(
+                onPressed: () async{
+                  final u = await Paydartchappa();
+                  await showDialog(context: context,
+                      builder: (context) => AlertDialog(
+                contentPadding: EdgeInsets.zero,
+                content: Container(
+                  width: MediaQuery.of(context).size.width * .85,
+                  child: WebviewScaffold(
+                      appBar: AppBar(
+                        leading: IconButton(
+                          onPressed: () async{
+                            Navigator.pop(context);
+                            await checktxn();
+                          },
+                          icon: Icon(Icons.arrow_back_rounded),
+                        ),
+                        backgroundColor: Colors.black54,
+                      ),
+                      url: (u).toString()),
+                ),
+                // Container(
+                //   child: TextButton(
+                //     onPressed: (){
+                //       launchUrl(u);
+                //     },
+                //     child: Text('Proceed to chappa'),),
+                // ),
+
+              ));
+              final flutterWebviewPlugin = FlutterWebviewPlugin();
+
+              flutterWebviewPlugin.onUrlChanged.listen((u) {
+                Navigator.pop(context);
+              });
+              },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0
+                ),
+                child: Card(
+                  color: Colors.white,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * .42,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 5),
+                      Text('Pay with ', style: TextStyle(color: Colors.lightGreen,
+                        fontWeight: FontWeight.w700, fontSize: 22),),
+                      Image.asset('Assets/img_6.png'),
+                      SizedBox(height: 2),
+                    ],
+              ),
+                  ),
+                )),
+            // TextButton(onPressed: paid == false ? null :() async{
+            //
+            // }, child: Text('Finish order'))
+          ],
         ),
       ),
 
         floatingActionButton:
         FloatingActionButton.extended(
-            onPressed: (){
+            onPressed: () async{
+
+             if(page == 2) {
+              final user = Provider.of<UserFB?>(context, listen: false);
               setState(() {
-                page ++ ;
+                taped = true;
               });
-            },
+              bool check = await checktxn();
+              if (check) {
+                List foods = [];
+                for(int i = 0; i < _selectedPlate.length; i++ ){
+                  foods.add(_selectedPlate[i].name);
+                }
+                print('finalizing');
+                await DatabaseService(uid: user!.uid).makeOrder(
+                    _choices[_choiceIndex],
+                    foods,
+                    _selectedContract.toString().substring(9),
+                    txnDetails);
+                setState(() {
+                  taped = false;
+                });
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => BottomTab(index: 1)));
+              }
+            }
+             if(page != 2){
+              setState(() {
+                page++;
+              });
+            }
+          },
             backgroundColor: Colors.lightGreen,
-            label: Text('Next')),
+            label:page == 2 && taped ? CircularProgressIndicator() : Text( page == 2 ? 'Finish order' :'Next')),
     );
   }
 
@@ -404,19 +534,105 @@ class _selectFoodState extends State<selectFood> {
     );
   }
 
+  Paydartchappa() async{
+    setState((){
+      txRef = generatetxRef();
+    });
+    var headers = {
+      'Authorization': 'Bearer CHASECK_TEST-vCHsrkKC3ZThcyPZ6dXsH254LmqNK5u6',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('POST', Uri.parse('https://api.chapa.co/v1/transaction/mobile-initialize'));
+    request.body = json.encode({
+      "amount": "100",
+      "currency": "ETB",
+      "email": "obab1223@gmail.com",
+      "first_name": "Bilen",
+      "last_name": "Gizachew",
+      "phone_number": "0912345678",
+      "tx_ref": txRef,
+      "named_route_fallBack": '/place', // fall back route name
+      "callback_url": "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
+      // "return_url": "/place",
+      "customization[title]": "Payment for my favourite merchant",
+      "customization[description]": "I love online payments"
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final res = await response.stream.bytesToString();
+      Map r = jsonDecode(res);
+      // res as Map;
+      print(r['data']['checkout_url']);
+      Uri u = Uri.parse(r['data']['checkout_url']);
+      return u;
+    }
+    else {
+    print(response.reasonPhrase);
+    print('Failed');
+    }
+
+  }
+
+  checktxn() async{
+    var headers = {
+      'Authorization': 'Bearer CHASECK_TEST-vCHsrkKC3ZThcyPZ6dXsH254LmqNK5u6'
+    };
+    var request = http.Request('GET', Uri.parse('https://api.chapa.co/v1/transaction/verify/${txRef}'));
+    request.body = '''''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final res = await response.stream.bytesToString();
+      Map r = jsonDecode(res);
+      print(r['status']);
+      if( r['status'] == 'success'){
+        setState(() {
+          txnDetails = Payment(
+              status: r['status'],
+              amount: r['data']['amount'],
+              date: r['data']['created_at'],
+              email: r['data']['email'],
+              fullName: r['data']['first_name'] + r['data']['last_name'],
+              txRef: r['data']['tx_ref']);
+          paid = true;
+        });
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+    print(response.reasonPhrase);
+    return false;
+    }
+  }
+
   Paychapa() {
     Chapa.paymentParameters(
       context: context, // context
       publicKey: 'CHAPUBK_TEST-OlS6DHT5O1cuE854j4Dp3bdBjSCp9nHC',
       currency: 'ETB',
       amount: '200',
-      email: 'gebetnutrition12@gmail.com',
+      email: 'obab1223@gmail.com',
       firstName: 'Kalkidan',
       lastName: 'Abere',
-      txRef: 'test123',
+      txRef: 'test3',
       title: 'title',
       desc:'desc',
-      namedRouteFallBack: '/second', // fall back route name
+      namedRouteFallBack: '/place', // fall back route name
     );
+
+  }
+
+  String generatetxRef() {
+    var r = Random();
+    const _chars = '0123456789';
+    return List.generate(8, (index) => _chars[r.nextInt(_chars.length)]).join();
   }
 }

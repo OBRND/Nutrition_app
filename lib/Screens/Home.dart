@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta/Model/User.dart';
+import 'package:gebeta/Screens/Ingridients.dart';
 import 'package:gebeta/Services/Auth.dart';
 import 'package:gebeta/Services/Database.dart';
 import 'package:intl/intl.dart';
@@ -75,85 +76,167 @@ class _HomeState extends State<Home> {
                     padding: const EdgeInsets.all(10.0),
                     child: Text('Breakfast', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.brown),),
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                    ),
-                    elevation: 2,
-                    color: Colors.white70,
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>  IngredientsPage()));
+                        },
                         child: Column(
                             children:[
                               SizedBox(
                                 height: 10,
                               ),
-                              Text('Your meals'),
-                              Text('Your meals'),
-                              Text('Your meals'),
-                              Text('Your meals'),
+                              Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(height: 100,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(20)
+                                          ),
+                                          child: ClipRRect(
+                                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                                              child: Image.asset('Assets/img_3.png',fit: BoxFit.fitWidth,))),
+                                      Container(
+                                        height: 80,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Fried Eggs', style: TextStyle(color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w500),),
+                                            Row(
+                                              children: [
+                                                Text('Cooking time - ',
+                                                  style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w700, fontSize: 14),),
+                                                Text('10 min', style: TextStyle(color: Colors.black54, fontSize: 12),),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 10,),
+                                    ],
+                                  )),
                               SizedBox(
                                 height: 10,
                               ),
-                            ])
+                            ]),
+                      )
 
-                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text('Lunch', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.brown),),
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                    ),
-                    elevation: 2,
-                    color: Colors.white70,
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                            children:[
-                              SizedBox(
-                                height: 10,
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                          children:[
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)
                               ),
-                              Text('Your meals'),
-                              Text('Your meals'),
-                              Text('Your meals'),
-                              Text('Your meals'),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ])
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(height: 100, width: 150,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20)
+                                    ),
+                                    child: ClipRRect(
+                                       borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                                        child: Image.asset('Assets/img_2.png',fit: BoxFit.fitWidth,))),
+                                    Container(
+                                      height: 80,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Gomen wet', style: TextStyle(color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w500),),
+                                          Row(
+                                            children: [
+                                              Text('Cooking time - ',
+                                                style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w700, fontSize: 14),),
+                                              Text('25 min', style: TextStyle(color: Colors.black54, fontSize: 12),),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 10,),
+                                  ],
+                                )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ])
 
-                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text('Dinner', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.brown),),
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                    ),
-                    elevation: 2,
-                    color: Colors.white70,
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                            children:[
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text('Your meals'),
-                              Text('Your meals'),
-                              Text('Your meals'),
-                              Text('Your meals'),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ])
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                          children:[
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(height: 100, width: 150,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20)
+                                        ),
+                                        child: ClipRRect(
+                                            borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+                                            child: Image.asset('Assets/img_4.png',fit: BoxFit.fitWidth,))),
+                                    Container(
+                                      height: 80,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Sega wet', style: TextStyle(color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w500),),
+                                          Row(
+                                            children: [
+                                              Text('Cooking time - ',
+                                                style: TextStyle(color: Colors.black54,fontWeight: FontWeight.w700, fontSize: 14),),
+                                              Text('40 min', style: TextStyle(color: Colors.black54, fontSize: 12),),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 10,),
+                                  ],
+                                )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                          ])
 
-                    ),
                   ),
 
                 ],
