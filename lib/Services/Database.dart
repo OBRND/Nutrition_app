@@ -9,6 +9,7 @@ class DatabaseService {
   final CollectionReference User_info = FirebaseFirestore.instance.collection('Users');
   final CollectionReference Orders = FirebaseFirestore.instance.collection('Orders');
   final CollectionReference Chats = FirebaseFirestore.instance.collection('Chats');
+  final CollectionReference Plan = FirebaseFirestore.instance.collection('Meal plan');
 
   Future getchat(String chatid) async{
     List chatlist;
@@ -59,6 +60,10 @@ class DatabaseService {
     print(last);
     print(phone);
     return [first,last,phone];
+  }
+
+  Future getPlan() async{
+    DocumentSnapshot snap = await Plan.doc().get();
   }
 
   Future updateUserData(String First_name, String Last_name, String Phone_number) async {

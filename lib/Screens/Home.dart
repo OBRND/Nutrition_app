@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta/Model/User.dart';
 import 'package:gebeta/Screens/Ingridients.dart';
-import 'package:gebeta/Services/Auth.dart';
 import 'package:gebeta/Services/Database.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +15,26 @@ class Home extends StatefulWidget {
 List selected = [false, false,false,false,false,false,false];
 String name = '';
 
+
 class _HomeState extends State<Home> {
+  int _selectedIndex = DateTime.now().weekday - 1;
+  int _selectedDate = DateTime.now().day;
+  final List<String> _daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserFB?>(context);
+
+    DateTime now = DateTime.now();
+    DateTime startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+
+    List<DateTime> weekDays = List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
+
+    while(weekDays[0].month != now.month) {
+      startOfWeek = startOfWeek.add(Duration(days: 7));
+      weekDays = List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
+    }
     
     return Scaffold(
       body: Container(
@@ -51,20 +66,48 @@ class _HomeState extends State<Home> {
               ),
             ),
             Container(
-              height: 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                      onPressed: (){}, icon: Icon(Icons.arrow_back),
-                  color: Colors.blueAccent,
-                  ),
-                  Center(child: Text(DateFormat.EEEE().format(DateTime.now()).toString(), style: TextStyle(
-                    fontWeight: FontWeight.w700, fontSize: 18),)),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.arrow_forward),
-                    color: Colors.blueAccent,
-                  ),
-                ],
+              height: 62,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _daysOfWeek.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                    child: Container(
+                      width: 50,
+                      margin: EdgeInsets.symmetric(horizontal: 3),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: index == _selectedIndex ? Colors.lightGreen : Colors
+                            .grey[200],
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Center(
+                        child: Column(
+                          children:[
+                            Text(weekDays[index].day.toString(),style: TextStyle(fontSize: 20, fontWeight: index == _selectedIndex ? FontWeight.bold : FontWeight.w300,
+                              color: index == _selectedIndex ? Colors.white : Colors.black,
+                            ),),
+                          // Text( index < _selectedIndex && _selectedDate + index < 31 && _selectedDate + index > 0 ? (_selectedDate - _selectedIndex).toString():
+                          // index > _selectedIndex && _selectedDate + index < 31 ? (_selectedDate + index).toString() :
+                          // _selectedDate + index == 31 ? '0' : _selectedDate.toString() ),
+                        Text(
+                            _daysOfWeek[index],
+                            style: TextStyle(fontSize: 12, fontWeight: index == _selectedIndex ? FontWeight.bold : FontWeight.w300,
+                              color: index == _selectedIndex ? Colors.white : Colors.black,
+                            ),
+                          ),
+                        ]
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             Container(

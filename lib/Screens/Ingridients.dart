@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 
@@ -5,7 +7,7 @@ class IngredientsPage extends StatefulWidget {
   final String foodName = 'Enkulal';
   final String imageURL = 'https://img.jamieoliver.com/jamieoliver/recipe-database/oldImages/large/576_1_1438868377.jpg?tr=w-800,h-1066';
   final List<Ingredient> ingredients = [
-    Ingredient(name: 'eggs', calories: 20, amount: '2'),
+    Ingredient(name: 'eggs', calories: 20, amount: '2 large'),
     Ingredient(name: 'zeyet', calories: 50, amount: '2 tea spoons'),
     Ingredient(name: 'shenkurt', calories: 100, amount: '2 medium'),
     Ingredient(name: 'timatim', calories: 200, amount: '3 medium'),
@@ -41,6 +43,15 @@ class _IngredientsPageState extends State<IngredientsPage> {
     double calculatedCalories = 0;
     for(int i = 0; i < widget.ingredients.length ; i++){
     calculatedCalories += widget.ingredients[i].calories;
+
+    String inputString = widget.ingredients[i].amount;
+    int indexOfSpace = inputString.indexOf(' ');
+    String substring = inputString.substring(0, indexOfSpace);
+
+    int amountsubed = int.parse(substring);
+    amountsubed * widget.ingredients[i].calories;
+    print(substring); // Output: "Hello"
+
     }
     setState(() {
       _totalCalories = calculatedCalories;
@@ -55,6 +66,13 @@ class _IngredientsPageState extends State<IngredientsPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+            icon: Icon(Icons.arrow_circle_left_rounded, size: 30,),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            color: complementColor, // Change the color of the back button here
+          ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
