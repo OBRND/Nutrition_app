@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 class IngredientsPage extends StatefulWidget {
-  final String foodName = 'Enkulal';
-  final String imageURL = 'https://img.jamieoliver.com/jamieoliver/recipe-database/oldImages/large/576_1_1438868377.jpg?tr=w-800,h-1066';
-  final List<Ingredient> ingredients = [
+  String foodName = 'Enkulal';
+  String imageURL = 'https://img.jamieoliver.com/jamieoliver/recipe-database/oldImages/large/576_1_1438868377.jpg?tr=w-800,h-1066';
+  List<Ingredient> ingredients = [
     Ingredient(name: 'eggs', calories: 20, amount: '2 large'),
     Ingredient(name: 'zeyet', calories: 50, amount: '2 tea spoons'),
     Ingredient(name: 'shenkurt', calories: 100, amount: '2 medium'),
     Ingredient(name: 'timatim', calories: 200, amount: '3 medium'),
   ];
+  double totalCalories = 0;
 
-  // IngredientsPage({required this.foodName, required this.imageURL, required this.ingredients});
+
+  IngredientsPage({required this.foodName, required this.imageURL, required this.ingredients, required this.totalCalories});
 
   @override
   _IngredientsPageState createState() => _IngredientsPageState();
@@ -22,13 +24,14 @@ class IngredientsPage extends StatefulWidget {
 class _IngredientsPageState extends State<IngredientsPage> {
   Color primaryColor = Colors.white;
   Color complementColor = Colors.black;
-  double _totalCalories = 0;
 
   @override
   void initState() {
     super.initState();
     _getDominantColor();
+    if(widget.ingredients[0].amount != '1'){
     _calculateTotalCalories();
+    }
   }
 
   Future<void> _getDominantColor() async {
@@ -54,7 +57,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
 
     }
     setState(() {
-      _totalCalories = calculatedCalories;
+      widget.totalCalories = calculatedCalories;
     });
   }
 
@@ -122,7 +125,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
                             color: complementColor.withOpacity(0.7),
                           ),
                         ),
-                        Text('${_totalCalories.toInt()} cal', style: TextStyle(
+                        Text('${widget.totalCalories.toInt()} cal', style: TextStyle(
                           fontSize: 17,
                           color: complementColor.withOpacity(0.7),
                         ),),
@@ -158,7 +161,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
                         SizedBox(width: 16),
                         Expanded(
                           child: Text(
-                            widget.ingredients[index].amount,
+                            widget.ingredients[0].amount == '1' ? widget.ingredients[index].calories.toString() : widget.ingredients[index].amount,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,

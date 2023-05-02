@@ -10,6 +10,279 @@ class DatabaseService {
   final CollectionReference Orders = FirebaseFirestore.instance.collection('Orders');
   final CollectionReference Chats = FirebaseFirestore.instance.collection('Chats');
   final CollectionReference Plan = FirebaseFirestore.instance.collection('Meal plan');
+  final CollectionReference Default = FirebaseFirestore.instance.collection('Basic');
+
+  Map data = {
+    "weight_gain": [
+      {
+        "meal": "Breakfast",
+        "calories": 400,
+        "ingredients": [
+          {"name": "Fir-fir", "calories": 250},
+          {"name": "Yogurt", "calories": 150}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 690,
+        "ingredients": [
+          {"name": "Tibs", "calories": 500},
+          {"name": "Timatim salad", "calories": 50},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 940,
+        "ingredients": [
+          {"name": "Doro kitfo", "calories": 600},
+          {"name": "Gomen besiga", "calories": 200},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Breakfast",
+        "calories": 400,
+        "ingredients": [
+          {"name": "Chechebsa", "calories": 250},
+          {"name": "Yogurt", "calories": 150}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 690,
+        "ingredients": [
+          {"name": "Kitfo", "calories": 450},
+          {"name": "Gomen", "calories": 100},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 700,
+        "ingredients": [
+          {"name": "Alicha wot", "calories": 300},
+          {"name": "Shiro", "calories": 200},
+          {"name": "Rice", "calories": 200}
+        ]
+      },
+      {
+        "meal": "Breakfast",
+        "calories": 450,
+        "ingredients": [
+          {"name": "Chechebsa", "calories": 300},
+          {"name": "Ful", "calories": 150}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 840,
+        "ingredients": [
+          {"name": "Doro wot", "calories": 600},
+          {"name": "Gomen", "calories": 100},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 740,
+        "ingredients": [
+          {"name": "Siga tibs", "calories": 500},
+          {"name": "Atakilt wot", "calories": 100},
+          {"name": "Enjera", "calories": 140}
+        ]
+      }
+    ],
+    "weight_maintain": [
+      {
+        "meal": "Breakfast",
+        "calories": 340,
+        "ingredients": [
+          {"name": "Shiro besiga", "calories": 200},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 320,
+        "ingredients": [
+          {"name": "Gomen", "calories": 100},
+          {"name": "Kik alicha", "calories": 80},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 640,
+        "ingredients": [
+          {"name": "Zilzil tibs", "calories": 400},
+          {"name": "Atakilt wot", "calories": 100},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Breakfast",
+        "calories": 340,
+        "ingredients": [
+          {"name": "Ful medames", "calories": 200},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 590,
+        "ingredients": [
+          {"name": "Doro alicha", "calories": 350},
+          {"name": "Atakilt wot", "calories": 100},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 610,
+        "ingredients": [
+          {"name": "Yebeg wot", "calories": 400},
+          {"name": "Tikel gomen", "calories": 70},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Breakfast",
+        "calories": 290,
+        "ingredients": [
+          {"name": "Fitfit", "calories": 250},
+          {"name": "Labneh", "calories": 40}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 340,
+        "ingredients": [
+          {"name": "Yemiser wot", "calories": 150},
+          {"name": "Timatim salad", "calories": 50},
+          {"name": "Enjera", "calories": 140}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 690,
+        "ingredients": [
+          {"name": "Gored gored", "calories": 350},
+          {"name": "Gomen besiga", "calories": 200},
+          {"name": "Enjera", "calories": 140}
+        ]
+      }
+    ],
+    "weight_loss": [
+      {
+        "meal": "Breakfast",
+        "calories": 150,
+        "ingredients": [
+          {"name": "Boiled eggs", "calories": 140},
+          {"name": "Salad (mixed greens)", "calories": 10}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 190,
+        "ingredients": [
+          {"name": "Buticha", "calories": 100},
+          {"name": "Kik alicha", "calories": 80},
+          {"name": "Salad (mixed greens)", "calories": 10}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 260,
+        "ingredients": [
+          {"name": "Yekik wot", "calories": 150},
+          {"name": "Gomen", "calories": 100},
+          {"name": "Salad (mixed greens)", "calories": 10}
+        ]
+      },
+      {
+        "meal": "Breakfast",
+        "calories": 160,
+        "ingredients": [
+          {"name": "Scrambled eggs with tomatoes and onions", "calories": 150},
+          {"name": "Salad (mixed greens)", "calories": 10}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 290,
+        "ingredients": [
+          {"name": "Mesir wot", "calories": 200},
+          {"name": "Yekik alicha", "calories": 80},
+          {"name": "Salad (mixed greens)", "calories": 10}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 260,
+        "ingredients": [
+          {"name": "Gomen besiga", "calories": 200},
+          {"name": "Azifa", "calories": 50},
+          {"name": "Salad (mixed greens)", "calories": 10}
+        ]
+      },
+      {
+        "meal": "Breakfast",
+        "calories": 280,
+        "ingredients": [
+          {"name": "Ambasha", "calories": 200},
+          {"name": "Sliced avocado", "calories": 80}
+        ]
+      },
+      {
+        "meal": "Lunch",
+        "calories": 190,
+        "ingredients": [
+          {"name": "Tikel gomen", "calories": 80},
+          {"name": "Buticha", "calories": 100},
+          {"name": "Salad (mixed greens)", "calories": 10}
+        ]
+      },
+      {
+        "meal": "Dinner",
+        "calories": 490,
+        "ingredients": [
+          {"name": "Yedoro tibs", "calories": 400},
+          {"name": "Fosolia", "calories": 80},
+          {"name": "Salad (mixed greens)", "calories": 10}
+        ]
+      }
+    ],
+  } as Map<String, dynamic>;
+
+
+  Future setBasics() async{
+    await Default.doc('Default').set(data);
+
+  }
+
+  Future getdata() async{
+    DocumentSnapshot snap = await Default.doc('Default').get();
+    List data = snap['weight_gain'];
+    List breakfast = [];
+    List lunch = [];
+    List dinner = [];
+    print(data);
+
+
+    for(int i = 0; i < data.length; i++){
+      if(data[i]['meal'] == 'Breakfast'){
+        breakfast.add(data[i]);
+      }
+      else if(data[i]['meal'] == 'Lunch'){
+        lunch.add(data[i]);
+      }
+      else{
+        dinner.add(data[i]);
+      }
+    }
+    return [breakfast,lunch, dinner];
+  }
 
   Future getchat(String chatid) async{
     List chatlist;

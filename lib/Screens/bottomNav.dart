@@ -8,6 +8,8 @@ import 'package:gebeta/Screens/Progress.dart';
 import 'package:gebeta/Services/Auth.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+import 'Custom_Plan.dart';
+
 class BottomTab extends StatefulWidget {
   // const BottomTab({Key? key}) : super(key: key);
   final int index;
@@ -26,6 +28,7 @@ class _BottomTabState extends State<BottomTab> {
     Progress(),
     Home(),
     Orders(),
+    Custom_Plan()
   ];
 
   void _onItemTapped(int index) {
@@ -192,6 +195,12 @@ class _BottomTabState extends State<BottomTab> {
                 iconColor: Colors.black54,
                 icon: Icons.list,
                 text: 'Orders',
+                iconSize: 25,
+              ),
+              GButton(
+                iconColor: Colors.black54,
+                icon: Icons.list,
+                text: 'Plan',
                 iconSize: 25,
               ),
             ],
