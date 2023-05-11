@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta/Model/User.dart';
 import 'package:gebeta/Screens/Ingridients.dart';
+import 'package:gebeta/Screens/Place_order/placeOrderPages.dart';
 import 'package:gebeta/Services/Database.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -32,15 +33,76 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: ListView(
         children: [
-          Text('Welcome home'),
-          defaultmeals(user!.uid)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Welcome home',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Card(
+                margin: EdgeInsets.all(10),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    'Remember, the key to weight management is to maintain a healthy balance'
+                        ' of calories and nutrients.\n\n Consult with or nutritionists to '
+                        'create a meal plan that meets your specific needs and goals.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => PlaceOrder()));
+                  },
+                  child: Text(
+                    'Place order',
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    primary: Colors.brown,
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 15),
+                child: Text(
+                  'Recommended dishes that you must try!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color(0xff5a7046),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Add the defaultmeals method to display recommended dishes with images
+          defaultmeals(user!.uid),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          DatabaseService(uid: user!.uid).getdata();
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: (){
+      //     DatabaseService(uid: user!.uid).getdata();
+      //   },
+      // ),
     );
 
   }
@@ -70,7 +132,7 @@ class _HomeState extends State<Home> {
                       builder: (context,AsyncSnapshot snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
-                            return Text('Checking there are previous orders',
+                            return Text('Loading contents',
                               style: TextStyle(fontSize: 20,
                                   color: Colors.black54,
                                   fontWeight: FontWeight.w500),);

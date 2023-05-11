@@ -67,7 +67,7 @@ Plate(id: 33, name: "በርበሬ"),
 Plate(id: 34, name: "አፕል"),
 ];
 final _items = _food
-    .map((food) => MultiSelectItem<Plate>(food, food.name))
+    .map((food) => MultiSelectItem<Plate>(food," ${food.name} "))
     .toList();
 
 enum Packages {basic,standard,premium}
@@ -126,7 +126,23 @@ class _PlaceOrderState extends State<PlaceOrder> {
                 child: _buildChoiceChips(),
               )),
               Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                padding: const EdgeInsets.all(20.0),
+                child: Text('Your weight goal',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600 ),),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
+                child: TextFormField(
+                    decoration: textinputdecoration.copyWith(hintText: 'Enter your weight goal'),
+                    validator: (val) => val!.isEmpty ? 'Enter your weight goal' : null,
+                    onChanged: (val){
+                      setState(() => alergies = val);
+                    }
+
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 20),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Color(0xd3ffffff),
@@ -140,9 +156,14 @@ class _PlaceOrderState extends State<PlaceOrder> {
                     children: <Widget>[
                       MultiSelectBottomSheetField(
                         buttonIcon: Icon(Icons.add),
-                        initialChildSize: 0.4,
+                        separateSelectedItems: true,
+                        initialChildSize: 0.7,
+                        maxChildSize: .7,
                         listType: MultiSelectListType.CHIP,
+                        initialValue: _selectedPlate,
                         searchable: true,
+                        itemsTextStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.w400, fontSize: 20),
+                        selectedItemsTextStyle: TextStyle(color: Colors.black54,fontWeight: FontWeight.w600, fontSize: 20),
                         buttonText: Text("Select prefered foods",
                           style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600, fontSize: 18),),
                         title: Text("Plate"),
@@ -158,6 +179,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                           });
                         },
                         chipDisplay: MultiSelectChipDisplay(
+                          alignment: Alignment.center,
                           onTap: (value) {
                             setState(() {
                               _selectedPlate.remove(value);
@@ -175,7 +197,8 @@ class _PlaceOrderState extends State<PlaceOrder> {
                               style: TextStyle(color: Colors.red),
                             ),
                           ))
-                          : Container(),
+                          : Container(
+                      )
                     ],
                   ),
                 ),
@@ -445,8 +468,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
         floatingActionButton:
         FloatingActionButton.extended(
             onPressed: () async{
-
-             if(page == 2) {
+              if(page == 2) {
               final user = Provider.of<UserFB?>(context, listen: false);
               setState(() {
                 taped = true;

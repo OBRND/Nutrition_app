@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gebeta/Model/Goal.dart';
 import 'package:gebeta/Model/Payment.dart';
 
 class DatabaseService {
@@ -10,6 +11,7 @@ class DatabaseService {
   final CollectionReference Orders = FirebaseFirestore.instance.collection('Orders');
   final CollectionReference Chats = FirebaseFirestore.instance.collection('Chats');
   final CollectionReference Plan = FirebaseFirestore.instance.collection('Meal plan');
+  final CollectionReference Goals = FirebaseFirestore.instance.collection('Goal');
   final CollectionReference Default = FirebaseFirestore.instance.collection('Basic');
 
   Map data = {
@@ -282,6 +284,46 @@ class DatabaseService {
       }
     }
     return [breakfast,lunch, dinner];
+  }
+
+  Future addgoal(Map goal) async{
+    DocumentSnapshot snap = await Goals.doc(uid).get();
+    List newgoals = snap['goals'];
+    newgoals.add(goal);
+    print(goal);
+    await Goals.doc(uid).set({
+      'goals' : newgoals
+    });
+  }
+
+  Future getgoals() async{
+    DocumentSnapshot snap = await Goals.doc(uid).get();
+    if(snap['goals'] == null){
+      return [];
+    }
+    else {
+      List<Map<String, dynamic>> goals = [];
+      for(int i = 0; i < snap['goals'].length; i++){
+        goals.add({
+          'goal': snap['goals'][i]['goal'],
+          'date': snap['goals'][i]['date'],
+          'reward': snap['goals'][i]['reward'],
+          'achieved': snap['goals'][i]['achieved'],
+          'index': i
+        });
+      }
+      print(goals);
+      return goals;
+    }
+  }
+
+  Future achieved(int index) async {
+    DocumentSnapshot snap = await Goals.doc(uid).get();
+    List allgoals = snap['goals'];
+    allgoals[index]['achieved'] = true;
+    await Goals.doc(uid).update({'goals': allgoals})
+        .then((value) => print('updated successfully'))
+        .catchError((onError) => print(onError));
   }
 
   Future getchat(String chatid) async{
