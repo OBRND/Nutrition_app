@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gebeta/Authentication/Sign_in.dart';
@@ -21,6 +22,7 @@ class _Sign_upState extends State<Sign_up> {
   String Last_name ='';
   String Phone_number = '';
   String error ="";
+  String Ctrycode = '';
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,6 @@ class _Sign_upState extends State<Sign_up> {
             padding: const EdgeInsets.only(top: 100),
             child: Container(
               child: Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey,
                 child: SingleChildScrollView(
                   child: Column(
@@ -51,7 +52,7 @@ class _Sign_upState extends State<Sign_up> {
                           decoration: textinputdecoration.copyWith(hintText: 'Email'),
                           validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                           onChanged: (val){
-                            setState(() => email = val);
+                            setState(() => email = val.trim());
                           }
 
                       ),
@@ -81,16 +82,43 @@ class _Sign_upState extends State<Sign_up> {
                           }
                       ),
                       SizedBox( height: 10),
-                      TextFormField(
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          decoration: textinputdecoration.copyWith(hintText: 'Phone number'),
-                          validator: (val) => val!.length == 10 ?   null : 'Please enter a 10 digit phone number ',
-                          onChanged: (val){
-                            setState(() => Phone_number = val );
-                          }
+                      Row(
+                        children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height * .1,
+                          width: MediaQuery.of(context).size.width * .3,
+                          child: CountryCodePicker(
+                          onChanged: (countryCode){
+                            setState(() {
+                              Ctrycode= countryCode.toString();
+                            });
+                          },
+                          // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                          initialSelection: 'ET',
+                          favorite: ['+39','FR'],
+                          // optional. Shows only country name and flag
+                          showCountryOnly: false,
+                          // optional. Shows only country name and flag when popup is closed.
+                          showOnlyCountryWhenClosed: false,
+                          // optional. aligns the flag and the Text left
+                          alignLeft: false,
+                      ),
+                        ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * .6,
+                            child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                decoration: textinputdecoration.copyWith(hintText: 'eg. 91 101 0101'),
+                                validator: (val) => val!.length < 9 || val!.length > 10 ? 'Please enter a valid phone number ' : null,
+                                onChanged: (val){
+                                  setState(() => Phone_number = val );
+                                }
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox( height: 10),
                       ElevatedButton(
@@ -106,7 +134,7 @@ class _Sign_upState extends State<Sign_up> {
                           onPressed: () async{
                             if(_formKey.currentState!.validate()){
                               //   setState(() => loading = true);
-                              dynamic result = await _auth.registerWEP(email, password,First_name, Last_name, Phone_number);
+                              dynamic result = await _auth.registerWEP(email, password,First_name, Last_name, (Ctrycode + Phone_number), context);
                               if(result == null){
                                 setState((){ error ='please supply a valid email';
                                   //     loading = false;

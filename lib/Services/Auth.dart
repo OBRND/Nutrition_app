@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gebeta/Model/User.dart';
 import 'Database.dart';
 
@@ -16,7 +17,7 @@ class Auth_service {
     return _auth.authStateChanges().map(userFromFirebase);
   }
 
-  Future registerWEP(String email, String password,String First_name,String Last_name,String Phone_number) async {
+  Future registerWEP(String email, String password,String First_name,String Last_name,String Phone_number, context) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -25,7 +26,9 @@ class Auth_service {
       await DatabaseService(uid: user!.uid).updateUserData(First_name,Last_name, Phone_number);
       // ProfileState().user(user!.uid);
       // DatabaseService(uid:user!.uid).getuserInfo(user!.uid);
-      return userFromFirebase(user);
+      Navigator.pushReplacementNamed(context, '/place');
+
+      // return userFromFirebase(user);
     } catch (e) {
       print(e.toString());
       return null;

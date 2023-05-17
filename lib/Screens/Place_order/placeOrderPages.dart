@@ -205,18 +205,29 @@ class _PlaceOrderState extends State<PlaceOrder> {
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text('Do you have any alergies we need to know about?',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600 ),),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10, left: 20, right: 20),
-                child: TextFormField(
-                    decoration: textinputdecoration.copyWith(hintText: 'Enter any alergies'),
-                    validator: (val) => val!.isEmpty ? 'Enter an email' : null,
-                    onChanged: (val){
-                      setState(() => alergies = val);
-                    }
-
+                child: Container(
+                  child: Wrap(
+                    children: [
+                      Center(child: Icon(Icons.warning, color: Colors.redAccent,size: 30,)),
+                      Container(
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent.withOpacity(.1),
+                            border: Border.all(
+                              color: Colors.redAccent.withOpacity(.5),
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text('We are not liable for any health issues that may arise because of alergies. \n'
+                              'If you have any serious alergies we reccomend you physically consult a nutrition planner. ',
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(
+                                0xDD2A2323)),),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

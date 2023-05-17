@@ -64,8 +64,11 @@ class _ProgressState extends State<Progress> {
                 children: [
                   SizedBox(height: 20,),
                   CircularPercentIndicator(
-                    header: Text('Your overall progress', style: TextStyle(
-                        color: Colors.black54, fontSize: 14, fontWeight: FontWeight.w600),),
+                    header: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Your overall progress', style: TextStyle(
+                          color: Colors.black54, fontSize: 14, fontWeight: FontWeight.w600),),
+                    ),
                     radius: 40.0,
                     lineWidth: 5.0,
                     percent: percentage,
@@ -73,24 +76,16 @@ class _ProgressState extends State<Progress> {
                         style: TextStyle(color: Colors.green,
                             fontSize: 18,
                             fontWeight: FontWeight.w700)),
-                    progressColor: Colors.amber,
+                    progressColor: Colors.lightGreen,
                     animation: true,
                     animationDuration: 500,
                     circularStrokeCap: CircularStrokeCap.round,
                   ),
                   SizedBox(height: 20,),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('Your Goal board', style: TextStyle(
-                            color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w800),),
-                      ),
-                      // Text(intake.toString(),
-                      //   style: TextStyle(fontSize: 22,
-                      //       fontWeight: FontWeight.w600,
-                      //       color: Colors.green),)
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Your Goal board', style: TextStyle(
+                        color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w800),),
                   ),
                   SizedBox(
                     height: 20,
@@ -171,37 +166,27 @@ class _ProgressState extends State<Progress> {
                                           borderRadius: BorderRadius.circular(
                                               5),
                                           border: Border.all(
-                                            color: _dateError == null ? Colors
-                                                .black : Colors
-                                                .red, // Check if there's an error message
+                                            color: _dateError == null ? Colors.black : Colors.red, // Check if there's an error message
                                           ),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .spaceBetween,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               pickedDate == null &&
                                                   _dateError == null
                                                   ? Icon(Icons.date_range)
                                                   : SizedBox(),
                                               SizedBox(width: 10),
-                                              Text(
-                                                pickedDate == null
-                                                    ? _dateError ??
-                                                    'Pick date' // Show error message or 'Select date' text
-                                                    : '${pickedDate!
-                                                    .toLocal()
-                                                    .toString()
-                                                    .split(' ')[0]}',
+                                              Text(pickedDate == null ? _dateError ?? 'Pick date' // Show error message or 'Select date' text
+                                                    : '${pickedDate!.toLocal().toString().split(' ')[0]}',
                                                 style: TextStyle(
                                                     color: pickedDate == null &&
                                                         _dateError == null ?
                                                     Colors.black : _dateError !=
                                                         null
-                                                        ? Colors.red : Colors
-                                                        .blue,
+                                                        ? Colors.red : Colors.blue,
                                                     fontSize: 12,
                                                     fontWeight: pickedDate ==
                                                         null &&

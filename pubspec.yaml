@@ -51,6 +51,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   expandable: ^5.0.1
   palette_generator: ^0.3.3+2
+  country_code_picker: ^3.0.0
 
 dev_dependencies:
   flutter_test:

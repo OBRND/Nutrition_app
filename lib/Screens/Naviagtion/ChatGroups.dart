@@ -44,7 +44,7 @@ class _ChatState extends State<Chat> {
     final user = Provider.of<UserFB?>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff336743),
+        backgroundColor: Colors.lightGreen,
         title: Text('Chat Room'),),
       body: Stack(
           // mainAxisSize: MainAxisSize.max,
@@ -57,7 +57,6 @@ class _ChatState extends State<Chat> {
                 child: FutureBuilder(
                     future: getallmessages(),
                     builder: (BuildContext context,AsyncSnapshot snapshot) {
-                      print('future returned: ${snapshot.data}');
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
                           return const Center(
@@ -143,13 +142,13 @@ class _ChatState extends State<Chat> {
                   stream: messagesStream(),
                   builder: (BuildContext context, AsyncSnapshot snap) {
                     return Container(
-                      height: 56,
+                      height: 52,
                       width: MediaQuery.of(context).size.width,
-                      color: Color(0xff336743),
+                      color: Colors.lightGreen,
                       child: Column(
                         children: [
                           SizedBox(
-                              height: 5
+                              height: 3
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -175,7 +174,7 @@ class _ChatState extends State<Chat> {
 
                               }, child: Icon(Icons.photo_library_rounded, size: 25),
                                 style: ButtonStyle(
-                                    foregroundColor: MaterialStateColor.resolveWith((states) => Colors.white),
+                                    foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black54),
                                     backgroundColor: MaterialStateColor.resolveWith((states) => Colors.transparent,
                                     )),),
                               Container(
@@ -210,7 +209,7 @@ class _ChatState extends State<Chat> {
                                 style: ButtonStyle(
                                   // shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   // RoundedRectangleBorder( borderRadius: BorderRadius.circular(10.0),)),
-                                    foregroundColor: MaterialStateColor.resolveWith((states) => Colors.white),
+                                    foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black54),
                                     backgroundColor: MaterialStateColor.resolveWith((states) => Colors.transparent,
                                     )),
                               ),

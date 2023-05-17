@@ -27,7 +27,6 @@ class _BottomTabState extends State<BottomTab> {
   static List<Widget> _widgetOptions = <Widget>[
     Progress(),
     Home(),
-    Orders(),
     Custom_Plan()
   ];
 
@@ -93,7 +92,7 @@ class _BottomTabState extends State<BottomTab> {
                   PopupMenuItem<String>(
                     value: 'chat room',
                     child: TextButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Chat(chatID: 'Public',)));
                       },
@@ -104,11 +103,17 @@ class _BottomTabState extends State<BottomTab> {
                     ),
                   ),
                   PopupMenuItem<String>(
-                    value: 'Goal_board',
-                    child: Text('Goal board',
-                      style: TextStyle(color: Colors.black54,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),),
+                    value: 'orders',
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Orders(),));
+                      },
+                      child: Text('Orders',
+                        style: TextStyle(color: Colors.black54,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500),),
+                    ),
                   ),
                   PopupMenuItem<String>(
                       value: 'Log_out',
@@ -190,12 +195,6 @@ class _BottomTabState extends State<BottomTab> {
                 text: 'Home',
                 iconSize: 25,
                 iconColor: Colors.black54,
-              ),
-              GButton(
-                iconColor: Colors.black54,
-                icon: Icons.list,
-                text: 'Orders',
-                iconSize: 25,
               ),
               GButton(
                 iconColor: Colors.black54,

@@ -69,9 +69,7 @@ class _Sign_inState extends State<Sign_in> {
                   ),
                   onPressed: () async{
                     if(_formkey.currentState!.validate()){
-                      // setState(() => loading = true);
                       dynamic result = await _auth.Signin_WEP(email, password);
-                      // Navigator.push(context, new MaterialPageRoute(builder: (context) => new Profile(result: new result("Priyank","28"))));
                       if(result == null){
                         setState(() {
                           error = 'Could not sign in with those credentials';

@@ -12,6 +12,10 @@ class Orders extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<UserFB?>(context);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.lightGreen,
+        title: Text('Orders',),
+      ),
       body: Column(
           children:[
             Padding(
@@ -28,8 +32,10 @@ class Orders extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20) ),
                 backgroundColor: Colors.brown),),
             Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text('past orders', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),),
+              padding: const EdgeInsets.all(25.0),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('past orders', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),)),
             ),
             FutureBuilder(
               future: DatabaseService(uid: user!.uid).getOrder(),
@@ -51,11 +57,11 @@ class Orders extends StatelessWidget {
                       return ExpandablePanel(
                           header: Padding(
                             padding: const EdgeInsets.fromLTRB(25, 5, 0, 5),
-                            child: Text('Contract : ${snapshot.data[0]}',style: TextStyle(color:Color(0xff2F2929), fontSize: 19, fontWeight: FontWeight.w700),),
+                            child: Text('Contract : ${snapshot.data[0]}',style: TextStyle(color:Color(0xff2F2929), fontSize: 19, fontWeight: FontWeight.w300),),
                           ),
                           collapsed:  Padding(
                             padding: const EdgeInsets.fromLTRB(25, 5, 0, 5),
-                            child: Text('Plan: ${snapshot.data[1]}',style: TextStyle(color:Color(0xff2F2929), fontSize: 19, fontWeight: FontWeight.w700),),
+                            child: Text('Plan: ${snapshot.data[1]}',style: TextStyle(color:Color(0xff2F2929), fontSize: 19, fontWeight: FontWeight.w300),),
                           ),
                           expanded: Padding(
                             padding: const EdgeInsets.all(10),
@@ -64,9 +70,9 @@ class Orders extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Paid with Chappa - ${snapshot.data[2]} br.',
-                                  style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w500),),
+                                  style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),),
                                 Text('Transaction reference: ${snapshot.data[2]} ${snapshot.data[3]}',
-                                  style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w500),),
+                                  style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),),
                               ],
                             ),
                           )
