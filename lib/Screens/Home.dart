@@ -132,10 +132,12 @@ class _HomeState extends State<Home> {
                       builder: (context,AsyncSnapshot snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
-                            return Text('Loading contents',
-                              style: TextStyle(fontSize: 20,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.w500),);
+                            return Center(
+                              child: Text('Loading contents...',
+                                style: TextStyle(fontSize: 16,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w300),),
+                            );
                         // case (ConnectionState.done) :
                           default: return getimages(snapshot.data[0]);
                         }
@@ -165,10 +167,12 @@ class _HomeState extends State<Home> {
                         builder: (context,AsyncSnapshot snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
-                              return Text('Checking there are previous orders',
-                                style: TextStyle(fontSize: 20,
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.w500),);
+                              return Center(
+                                child: Text('Loading contents...',
+                                  style: TextStyle(fontSize: 16,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w300),),
+                              );
                           // case (ConnectionState.done) :
                             default: return getimages(snapshot.data[1]);
                           }
@@ -199,10 +203,12 @@ class _HomeState extends State<Home> {
                         builder: (context,AsyncSnapshot snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
-                              return Text('Checking there are previous orders',
-                                style: TextStyle(fontSize: 20,
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.w500),);
+                              return Center(
+                                child: Text('Loading contents...',
+                                  style: TextStyle(fontSize: 16,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w300),),
+                              );
                           // case (ConnectionState.done) :
                             default: return getimages(snapshot.data[2]);
                           }

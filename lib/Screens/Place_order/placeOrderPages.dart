@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:gebeta/Model/Payment.dart';
 import 'package:gebeta/Model/User.dart';
@@ -85,6 +86,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
   bool taped = false;
   late Payment txnDetails;
   String txRef = '';
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController firstNamectrl = TextEditingController();
+  TextEditingController lastNamectrl = TextEditingController();
+  TextEditingController phonectrl = TextEditingController();
+
+
 
 
   @override
@@ -411,64 +418,121 @@ class _PlaceOrderState extends State<PlaceOrder> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text('Payment', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),),
-            SizedBox(height: MediaQuery.of(context).size.height * .15),
-            TextButton(
-                onPressed: () async{
-                  final u = await Paydartchappa();
-                  await showDialog(context: context,
-                      builder: (context) => AlertDialog(
-                contentPadding: EdgeInsets.zero,
-                content: Container(
-                  width: MediaQuery.of(context).size.width * .85,
-                  child: WebviewScaffold(
-                      appBar: AppBar(
-                        leading: IconButton(
-                          onPressed: () async{
-                            Navigator.pop(context);
-                            await checktxn();
-                          },
-                          icon: Icon(Icons.arrow_back_rounded),
-                        ),
-                        backgroundColor: Colors.black54,
-                      ),
-                      url: (u).toString()),
+            SizedBox(height: MediaQuery.of(context).size.height * .05),
+            Container(
+              width: MediaQuery.of(context).size.width * .5,
+              child: Form(
+                key: _formKey,
+                child:
+              Column(
+                children: [
+                  TextFormField(
+                controller: firstNamectrl,
+                decoration: textinputdecoration.copyWith(
+                  hintText: 'First name',
+                  hintStyle: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 12,),
+                  border: OutlineInputBorder(),
                 ),
-                // Container(
-                //   child: TextButton(
-                //     onPressed: (){
-                //       launchUrl(u);
-                //     },
-                //     child: Text('Proceed to chappa'),),
-                // ),
-
-              ));
-              final flutterWebviewPlugin = FlutterWebviewPlugin();
-
-              flutterWebviewPlugin.onUrlChanged.listen((u) {
-                Navigator.pop(context);
-              });
-              },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0
-                ),
-                child: Card(
-                  color: Colors.white,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * .42,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 5),
-                      Text('Pay with ', style: TextStyle(color: Colors.lightGreen,
-                        fontWeight: FontWeight.w700, fontSize: 22),),
-                      Image.asset('Assets/img_6.png'),
-                      SizedBox(height: 2),
-                    ],
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your first name';
+                  }
+                  return null;
+                },
               ),
+                TextFormField(
+                  controller: lastNamectrl,
+                  decoration: textinputdecoration.copyWith(
+                    hintText: 'Last name',
+                    hintStyle: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 12,),
+                    border: OutlineInputBorder(),
                   ),
-                )),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your last name ';
+                    }
+                    return null;
+                  },
+                ),
+                  TextFormField(
+                  controller: phonectrl,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: textinputdecoration.copyWith(hintText: 'Phone number',
+                      hintStyle: TextStyle(
+                      color: Colors.blueAccent,
+                      fontSize: 12,),),
+                    validator: (val) => val!.length < 9 || val!.length > 10 ? 'Please enter a valid phone number ' : null,
+                ),
+                  TextButton(
+                      onPressed: () async{
+                        if(_formKey.currentState!.validate()){
+                          final u = await Paydartchappa(firstNamectrl.text, lastNamectrl.text, phonectrl.text);
+                          await showDialog(context: context,
+                              builder: (context) => AlertDialog(
+                                contentPadding: EdgeInsets.zero,
+                                content: Container(
+                                  width: MediaQuery.of(context).size.width * .85,
+                                  child: WebviewScaffold(
+                                      appBar: AppBar(
+                                        leading: IconButton(
+                                          onPressed: () async{
+                                            Navigator.pop(context);
+                                            await checktxn();
+                                          },
+                                          icon: Icon(Icons.arrow_back_rounded),
+                                        ),
+                                        backgroundColor: Colors.black54,
+                                      ),
+                                      url: (u).toString()),
+                                ),
+                                // Container(
+                                //   child: TextButton(
+                                //     onPressed: (){
+                                //       launchUrl(u);
+                                //     },
+                                //     child: Text('Proceed to chappa'),),
+                                // ),
+
+                              ));
+                          final flutterWebviewPlugin = FlutterWebviewPlugin();
+
+                          flutterWebviewPlugin.onUrlChanged.listen((u) {
+                            Navigator.pop(context);
+                          });
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0
+                      ),
+                      child: Card(
+                        color: Colors.white,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * .42,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 5),
+                              Text('Pay with ', style: TextStyle(color: Colors.lightGreen,
+                                  fontWeight: FontWeight.w700, fontSize: 22),),
+                              Image.asset('Assets/img_6.png'),
+                              SizedBox(height: 2),
+                            ],
+                          ),
+                        ),
+                      )),
+
+                ],
+              )),
+            ),
             // TextButton(onPressed: paid == false ? null :() async{
             //
             // }, child: Text('Finish order'))
@@ -566,23 +630,26 @@ class _PlaceOrderState extends State<PlaceOrder> {
       ),
     );
   }
-
-  Paydartchappa() async{
+int amount = 0;
+  Paydartchappa(firstName, lastName, phoneNumber) async{
     setState((){
       txRef = generatetxRef();
     });
+    if(_selectedContract.toString().substring(9) == "Basic") setState(() => amount = 800);
+    if(_selectedContract.toString().substring(9) == "Standard") setState(() => amount = 2200);
+    if(_selectedContract.toString().substring(9) == "Premium") setState(() => amount = 4000);
     var headers = {
       'Authorization': 'Bearer CHASECK_TEST-vCHsrkKC3ZThcyPZ6dXsH254LmqNK5u6',
       'Content-Type': 'application/json'
     };
     var request = http.Request('POST', Uri.parse('https://api.chapa.co/v1/transaction/mobile-initialize'));
     request.body = json.encode({
-      "amount": "100",
+      "amount":(_selectedContract.toString().substring(9) == "Basic") ? "800": _selectedContract.toString().substring(9) == "Standard" ? "2200" : "4000",
       "currency": "ETB",
-      "email": "obab1223@gmail.com",
-      "first_name": "Bilen",
-      "last_name": "Gizachew",
-      "phone_number": "0912345678",
+      "email": "example@gmail.com",
+      "first_name": "${firstName}",
+      "last_name": "${lastName}",
+      "phone_number": "${phoneNumber}",
       "tx_ref": txRef,
       "named_route_fallBack": '/place', // fall back route name
       "callback_url": "https://webhook.site/077164d6-29cb-40df-ba29-8a00e59a7e60",
@@ -652,7 +719,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
       publicKey: 'CHAPUBK_TEST-OlS6DHT5O1cuE854j4Dp3bdBjSCp9nHC',
       currency: 'ETB',
       amount: '200',
-      email: 'obab1223@gmail.com',
+      email: 'example@gmail.com',
       firstName: 'Kalkidan',
       lastName: 'Abere',
       txRef: 'test3',

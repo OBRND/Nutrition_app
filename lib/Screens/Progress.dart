@@ -1,3 +1,4 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gebeta/Model/Goal.dart';
@@ -50,10 +51,21 @@ class _ProgressState extends State<Progress> {
     });
   }
 
+  double calculateGoalPercentage(List<Map<String, dynamic>> goals) {
+    if (goals.isEmpty) {
+      return 0.0;
+    }
+
+    final int totalGoals = goals.length;
+    final int achievedGoals = goals.where((goal) => goal['achieved'] == true).length;
+
+    return (achievedGoals / totalGoals);
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserFB?>(context);
+    double percentage = calculateGoalPercentage(goals);
 
     return Scaffold(
       body: ListView(
@@ -91,10 +103,7 @@ class _ProgressState extends State<Progress> {
                     height: 20,
                   ),
                   Container(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * .45,
+                    height: MediaQuery.of(context).size.height * .45,
                     child: Column(
                       children: [
                         Row(
@@ -125,7 +134,7 @@ class _ProgressState extends State<Progress> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Expanded(
-                                  flex: 2,
+                                  flex: 4,
                                   child: TextFormField(
                                     controller: goalController,
                                     decoration: InputDecoration(
@@ -144,58 +153,65 @@ class _ProgressState extends State<Progress> {
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 2,
+                                  flex: pickedDate != null ? 3 : 4,
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 8.0),
-                                    child: GestureDetector(
-                                      onTap: () async {
-                                        final DateTime? picked = await showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime.now(),
-                                          lastDate: DateTime(2101),
-                                        );
-                                        setState(() {
-                                          pickedDate = picked;
-                                        });
-                                        // Clear any error messages when a date is picked
-                                        _dateError = null;
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                              5),
-                                          border: Border.all(
-                                            color: _dateError == null ? Colors.black : Colors.red, // Check if there's an error message
+                                    child: Container(
+                                      child: ElevatedButton(
+                                        onPressed: () async {
+                                          final DateTime? picked = await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime(2101),
+                                          );
+                                          setState(() {
+                                            pickedDate = picked;
+                                          });
+                                          // Clear any error messages when a date is picked
+                                          _dateError = null;
+                                        },
+                                        style: ElevatedButton.styleFrom(
+
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(5),
+                                                bottomRight: Radius.circular(5),),
+                                            side: BorderSide(
+                                              color: _dateError == null ? Colors.black54 : Colors.red, // Check if there's an error message
+                                              width: 1.0,
+                                            ),
                                           ),
+                                          backgroundColor: Colors.white,
+                                          elevation:0,
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Column(
+                                          padding: const EdgeInsets.only(top: 6, bottom: 6),
+                                          child: pickedDate != null ? Padding(
+                                            padding: const EdgeInsets.only(top: 12, bottom: 12),
+                                            child: Center(child: Icon(Icons.check, color: Colors.blue)),
+                                          ) : Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               pickedDate == null &&
                                                   _dateError == null
-                                                  ? Icon(Icons.date_range)
-                                                  : SizedBox(),
+                                                  ? Icon(Icons.date_range, color: Colors.blue,)
+                                                  :
                                               SizedBox(width: 10),
-                                              Text(pickedDate == null ? _dateError ?? 'Pick date' // Show error message or 'Select date' text
-                                                    : '${pickedDate!.toLocal().toString().split(' ')[0]}',
-                                                style: TextStyle(
-                                                    color: pickedDate == null &&
-                                                        _dateError == null ?
-                                                    Colors.black : _dateError !=
-                                                        null
-                                                        ? Colors.red : Colors.blue,
-                                                    fontSize: 12,
-                                                    fontWeight: pickedDate ==
-                                                        null &&
-                                                        _dateError == null
-                                                        ?
-                                                    FontWeight.w500
-                                                        : _dateError != null ?
-                                                    FontWeight.w800 : FontWeight
-                                                        .w300),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 5.0, bottom: 5),
+                                                child: Text(pickedDate == null ? _dateError ?? 'Pick date' // Show error message or 'Select date' text
+                                                      : '',
+                                                  style: TextStyle(
+                                                      color: pickedDate == null &&
+                                                          _dateError == null ?
+                                                      Colors.blue : _dateError != null ? Colors.red : Colors.blue,
+                                                      fontSize: 12,
+                                                      fontWeight: pickedDate == null && _dateError == null
+                                                          ?
+                                                      FontWeight.w500 : _dateError != null ?
+                                                      FontWeight.w800 : FontWeight.w400),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -206,7 +222,7 @@ class _ProgressState extends State<Progress> {
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 3,
+                                  flex: 6,
                                   child: TextFormField(
                                     controller: rewardController,
                                     decoration: InputDecoration(
@@ -225,7 +241,7 @@ class _ProgressState extends State<Progress> {
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 1,
+                                  flex: 2,
                                   child: IconButton(
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
@@ -254,7 +270,7 @@ class _ProgressState extends State<Progress> {
                                         }
                                       }
                                     },
-                                    icon: Icon(Icons.add),
+                                    icon: Icon(Icons.add_circle_outline, size: 30, color: Colors.black54,),
                                   ),
                                 ),
                               ],
@@ -269,9 +285,11 @@ class _ProgressState extends State<Progress> {
                             child: Text('No goals added'),
                           )
                               : SizedBox(
-                                width: MediaQuery.of(context).size.width,
+                                width: MediaQuery.of(context).size.width * .9,
                                 child: SingleChildScrollView(
                                   child: DataTable(
+                                    columnSpacing: 0,
+                                    horizontalMargin: 0,
                               columns: const <DataColumn>[
                                 DataColumn(
                                   label: Text(
@@ -310,18 +328,18 @@ class _ProgressState extends State<Progress> {
                                         DataCell(
                                             Container(
                                                 constraints: BoxConstraints(
-                                                  maxWidth: MediaQuery.of(context).size.width * .08, // set the maximum width for the cell
+                                                  maxWidth: MediaQuery.of(context).size.width * .25, // set the maximum width for the cell
                                                 ),
                                                 child: Text(goal['goal'], maxLines: 3))),
                                         DataCell(
                                             Container(
                                                 constraints: BoxConstraints(
-                                                  maxWidth: MediaQuery.of(context).size.width * .14 // set the maximum width for the cell
+                                                  maxWidth: MediaQuery.of(context).size.width * .15 // set the maximum width for the cell
                                                 ),  child: Text(DateFormat('MMM d').format(DateTime.parse((goal['date']))), maxLines: 3))),
                                         DataCell(
                                             Container(
                                                 constraints: BoxConstraints(
-                                                  maxWidth: MediaQuery.of(context).size.width * .1, // set the maximum width for the cell
+                                                  maxWidth: MediaQuery.of(context).size.width * .3, // set the maximum width for the cell
                                                 ), child: Text(goal['reward'], maxLines: 3))),
                                         DataCell(goal['achieved'] ? Container(
                                           constraints: BoxConstraints(
@@ -344,29 +362,7 @@ class _ProgressState extends State<Progress> {
                                                 goals[goal['index']]['achieved'] =
                                                 true;
                                               });
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(
-                                                  backgroundColor: Colors.transparent,
-                                                  elevation: 0,
-                                                  behavior: SnackBarBehavior.floating,
-                                                  content: Builder(
-                                                    builder: (BuildContext context) {
-                                                      final snackBarHeight = Scaffold.of(context).appBarMaxHeight! + kToolbarHeight;
-                                                      return Padding(
-                                                        padding: EdgeInsets.only(top: snackBarHeight),
-                                                        child: Align(
-                                                          alignment: Alignment.topRight,
-                                                          child: AnimatedToast(message: 'Congrats on achieving ${goal['goal']}!'),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                  duration: Duration(seconds: 2),
-                                                ),
-                                              );
-
-
-
+                                              makealert(goal['goal']);
                                             }, icon: Icon(Icons.radio_button_unchecked)),
                                           ),
                                         ))
@@ -387,5 +383,58 @@ class _ProgressState extends State<Progress> {
       ),
 
     );
+  }
+
+ makealert(goal) {
+    return AnimatedSnackBar(
+      builder: ((context) {
+        return Container(
+          width: MediaQuery.of(context).size.width * .9,
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+            ),
+            elevation: 0,
+            color: Colors.black12.withOpacity(.8),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 60,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(.8),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Center(
+                      child: Icon(Icons.check,
+                        size: 30, color: Colors.green,),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('     \u{1F389} Congrats \u{1F389}', style:  TextStyle(color: Colors.white.withOpacity(.7), fontSize: 18, fontWeight: FontWeight.w600),),
+                          Text('You have achieved ${goal}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style:  TextStyle(color: Colors.white70.withOpacity(.6), fontSize: 14, fontWeight: FontWeight.w400)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }),
+    ).show(context);
   }
 }
