@@ -235,7 +235,7 @@ class _HomeState extends State<Home> {
             List<Ingredient> ingred = [];
             for(int i = 0; i <data[index]["ingredients"].length; i++ ){
               ingred.add(
-                Ingredient(name: data[index]["ingredients"][i]['name'], calories: double.parse(data[index]["ingredients"][i]['calories'].toString()), amount: '1'),
+                Ingredient(name: data[index]["ingredients"][i]['name'], calories: (data[index]["ingredients"][i]['calories'].toString() +' cal'), amount: '1'),
               );
             }
 

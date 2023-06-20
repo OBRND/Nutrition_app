@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +43,9 @@ class _ChatState extends State<Chat> {
     final user = Provider.of<UserFB?>(context);
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black54),
         backgroundColor: Colors.lightGreen,
-        title: Text('Chat Room'),),
+        title: Text('Chat Room', style: TextStyle(color: Colors.black54),),),
       body: Stack(
           // mainAxisSize: MainAxisSize.max,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,7 +201,7 @@ class _ChatState extends State<Chat> {
                                 print('${myController.text}');
 
                                 await DatabaseService(uid: user!.uid).updatechat(myController.text, chatID);
-                                await DatabaseService(uid: user!.uid).updateunread( chatID);
+                                await DatabaseService(uid: user!.uid).updateunread(chatID);
                                 // await db.getmessages();
                                 setState(() => myController.text = ''
                                 );
@@ -219,7 +219,16 @@ class _ChatState extends State<Chat> {
                       ),
                     );
                   }),
-            )
+            ),
+            Card(
+              margin: EdgeInsets.zero,
+              color: Colors.black54.withOpacity(.6),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text('This chat is for people to share their jorney and experiences to maintain their weight',
+                  style:  TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w300),),
+              ),
+            ),
           ]
       ),
     );

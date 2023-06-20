@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gebeta/Model/Goal.dart';
 import 'package:gebeta/Model/Payment.dart';
+import 'package:gebeta/Model/Recipee.dart';
 
 class DatabaseService {
   final String uid;
@@ -10,9 +11,10 @@ class DatabaseService {
   final CollectionReference User_info = FirebaseFirestore.instance.collection('Users');
   final CollectionReference Orders = FirebaseFirestore.instance.collection('Orders');
   final CollectionReference Chats = FirebaseFirestore.instance.collection('Chats');
-  final CollectionReference Plan = FirebaseFirestore.instance.collection('Meal plan');
+  final CollectionReference Plan = FirebaseFirestore.instance.collection('mealPlans');
   final CollectionReference Goals = FirebaseFirestore.instance.collection('Goal');
   final CollectionReference Default = FirebaseFirestore.instance.collection('Basic');
+  final CollectionReference recipees = FirebaseFirestore.instance.collection('recepies');
 
   Map data = {
     "weight_gain": [
@@ -378,7 +380,21 @@ class DatabaseService {
   }
 
   Future getPlan() async{
-    DocumentSnapshot snap = await Plan.doc().get();
+    QuerySnapshot snap = await Plan.where('orderId', isEqualTo: uid).get();
+    print(snap.docs[0]['weekPlans']);
+    List weekplan = snap.docs[0]['weekPlans'];
+    return weekplan;
+  }
+
+  Future getrecipee(recpeeId) async{
+    DocumentSnapshot snap = await recipees.doc(recpeeId).get();
+    print(snap['name']);
+    print(snap['cookingTime']);
+    print(snap['imageUrl']);
+    print(snap['ingredients']);
+    Recipee recipee = Recipee(cookingTime: snap['cookingTime'], imageURL: snap['imageUrl'],
+        name: snap['name'], ingredients: snap['ingredients']);
+    return recipee;
   }
 
   Future updateUserData(String First_name, String Last_name, String Phone_number) async {
@@ -415,7 +431,8 @@ class DatabaseService {
       'contract': contract,
       'date': DateTime.now(),
       'payment_details': details,
-      'uid': uid
+      'uid': uid,
+      'Completed': false
     });
   }
 

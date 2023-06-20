@@ -94,7 +94,7 @@ class _BottomTabState extends State<BottomTab> {
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Chat(chatID: 'Public',)));
+                            builder: (context) => Chat(chatID: 'weight maintain',)));
                       },
                       child: Text('Chat room',
                         style: TextStyle(color: Colors.black54,

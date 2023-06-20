@@ -7,10 +7,10 @@ class IngredientsPage extends StatefulWidget {
   String foodName = 'Enkulal';
   String imageURL = 'https://img.jamieoliver.com/jamieoliver/recipe-database/oldImages/large/576_1_1438868377.jpg?tr=w-800,h-1066';
   List<Ingredient> ingredients = [
-    Ingredient(name: 'eggs', calories: 20, amount: '2 large'),
-    Ingredient(name: 'zeyet', calories: 50, amount: '2 tea spoons'),
-    Ingredient(name: 'shenkurt', calories: 100, amount: '2 medium'),
-    Ingredient(name: 'timatim', calories: 200, amount: '3 medium'),
+    Ingredient(name: 'eggs', calories: '20 cal', amount: '2 large'),
+    Ingredient(name: 'zeyet', calories: '50 cal', amount: '2 tea spoons'),
+    Ingredient(name: 'shenkurt', calories: '100 cal', amount: '2 medium'),
+    Ingredient(name: 'timatim', calories: '200 cal', amount: '3 medium'),
   ];
   double totalCalories = 0;
 
@@ -45,16 +45,18 @@ class _IngredientsPageState extends State<IngredientsPage> {
   void _calculateTotalCalories() {
     double calculatedCalories = 0;
     for(int i = 0; i < widget.ingredients.length ; i++){
-    calculatedCalories += widget.ingredients[i].calories;
 
     String inputString = widget.ingredients[i].amount;
+    String calories = widget.ingredients[i].calories;
     int indexOfSpace = inputString.indexOf(' ');
+    int indexOfSpacecal = calories.indexOf(' ');
+    String Stringcal = calories.substring(0, indexOfSpacecal);
     String substring = inputString.substring(0, indexOfSpace);
 
-    int amountsubed = int.parse(substring);
-    amountsubed * widget.ingredients[i].calories;
+    double amountsubed = double.parse(substring);
+    double caloriesubed = double.parse(Stringcal);
+    calculatedCalories  = amountsubed * caloriesubed;
     print(substring); // Output: "Hello"
-
     }
     setState(() {
       widget.totalCalories = calculatedCalories;
@@ -149,7 +151,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 5,
                           child: Text(
                             widget.ingredients[index].name,
                             style: TextStyle(
@@ -158,15 +160,21 @@ class _IngredientsPageState extends State<IngredientsPage> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 16),
+                        // SizedBox(),
                         Expanded(
-                          child: Text(
-                            widget.ingredients[0].amount == '1' ? widget.ingredients[index].calories.toString() : widget.ingredients[index].amount,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.right,
+                          flex: 4,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.ingredients[0].amount == '1' ? widget.ingredients[index].calories.toString() : widget.ingredients[index].amount,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -185,7 +193,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
 
 class Ingredient {
   final String name;
-  final double calories;
+  final String calories;
   final String amount;
 
   Ingredient({required this.name, required this.calories, required this.amount});
