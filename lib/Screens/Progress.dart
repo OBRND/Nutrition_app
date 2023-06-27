@@ -1,8 +1,8 @@
+// import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gebeta/Model/Goal.dart';
-import 'package:gebeta/Screens/toast.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -280,11 +280,10 @@ class _ProgressState extends State<Progress> {
 
                         SizedBox(height: 20),
                         Expanded(
-                          child: goals.isEmpty
-                              ? Center(
+                          child: goals.isEmpty ? Center(
                             child: Text('No goals added'),
-                          )
-                              : SizedBox(
+                          ) :
+                          SizedBox(
                                 width: MediaQuery.of(context).size.width * .9,
                                 child: SingleChildScrollView(
                                   child: DataTable(

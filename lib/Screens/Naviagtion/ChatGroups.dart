@@ -52,88 +52,95 @@ class _ChatState extends State<Chat> {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 56),
-              child: Container(
-                height: MediaQuery.of(context).size.height * .9,
-                child: FutureBuilder(
-                    future: getallmessages(),
-                    builder: (BuildContext context,AsyncSnapshot snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.black38,
-                              ));
-                        default:
-                          if(snapshot.data == null){
-                            DatabaseService(uid: user!.uid).createChat();
-                          }
-                          return StreamBuilder(
-                            stream: messagesStream(),
-                            builder: (BuildContext context, AsyncSnapshot snap) {
-                              if(!messages.contains(snap.data['chats'].last)){
-                                messages.add(snap.data['chats'].last);
+              child: Column(
+                children: [
+                  Container(
+                      height: MediaQuery.of(context).size.height * .075,
+                  ),
+                  Container(
+                    // height: MediaQuery.of(context).size.height * .7,
+                    child: FutureBuilder(
+                        future: getallmessages(),
+                        builder: (BuildContext context,AsyncSnapshot snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black38,
+                                  ));
+                            default:
+                              if(snapshot.data == null){
+                                DatabaseService(uid: user!.uid).createChat();
                               }
-                              print('stream rebuilt');
-                              if (snapshot.hasError) {
-                                return Text('Something went wrong');
-                              }
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return Text("Loading");
-                              }
-                              // messages.add(ChatMessage(messageContent: '${snap.data['chatValues']['4y9r3uWdmZgahwguu5cjjl3fodk2 ${messages.length}']}',
-                              //     messageType: 'sender', type: 'text'));
-                              // print(snap.data['chatValues'][0]);
-                              return Align(
-                                alignment: Alignment.topCenter,
-                                child: ListView.builder(
-                                  // controller: _sc,
-                                  reverse: true,
-                                  dragStartBehavior: DragStartBehavior.down,
-                                  itemCount: snapshot.data.length,
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                                  // physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    final reversedIndex = snapshot.data.length - 1 - index;
-                                    // WidgetsBinding.instance.addPostFrameCallback((_) => {_sc.jumpTo(_sc.position.maxScrollExtent)});
-                                    // messages[reversedIndex].type == 'image' ? print('an image'): print(' a text');
-                                    return Container(
-                                      padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-                                      child: Align(
-                                        alignment: (snapshot.data[reversedIndex].toString().startsWith('${user?.uid.substring(0,5)}') ? Alignment.topRight : Alignment.topLeft),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            color: (snapshot.data[reversedIndex].toString().startsWith('${user?.uid.substring(0,5)}') ? Colors.grey.shade200 : Colors.blue[200]),
-                                          ),
-                                          padding: EdgeInsets.all(16),
-                                          child: snapshot.data[reversedIndex].toString().startsWith('image') ?
-                                          Container(
-                                            child: Image.network(
-                                              '${snapshot.data[reversedIndex]}',
-                                              errorBuilder:  (context, error, stackTrace) {
-                                                return Container(
-                                                  color: Colors.black12,
-                                                  alignment: Alignment.center,
-                                                  child: const Text(
-                                                    'Whoops!, check your connection and try again',
-                                                    style: TextStyle(fontSize: 25),
-                                                  ),
-                                                );
-                                              },
+                              return StreamBuilder(
+                                stream: messagesStream(),
+                                builder: (BuildContext context, AsyncSnapshot snap) {
+                                  if(!messages.contains(snap.data['chats'].last)){
+                                    messages.add(snap.data['chats'].last);
+                                  }
+                                  print('stream rebuilt');
+                                  if (snapshot.hasError) {
+                                    return Text('Something went wrong');
+                                  }
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Text("Loading");
+                                  }
+                                  // messages.add(ChatMessage(messageContent: '${snap.data['chatValues']['4y9r3uWdmZgahwguu5cjjl3fodk2 ${messages.length}']}',
+                                  //     messageType: 'sender', type: 'text'));
+                                  // print(snap.data['chatValues'][0]);
+                                  return Align(
+                                    alignment: Alignment.topCenter,
+                                    child: ListView.builder(
+                                      // controller: _sc,
+                                      reverse: true,
+                                      dragStartBehavior: DragStartBehavior.down,
+                                      itemCount: snapshot.data.length,
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                                      // physics: NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        final reversedIndex = snapshot.data.length - 1 - index;
+                                        // WidgetsBinding.instance.addPostFrameCallback((_) => {_sc.jumpTo(_sc.position.maxScrollExtent)});
+                                        // messages[reversedIndex].type == 'image' ? print('an image'): print(' a text');
+                                        return Container(
+                                          padding: EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
+                                          child: Align(
+                                            alignment: (snapshot.data[reversedIndex].toString().startsWith('${user?.uid.substring(0,5)}') ? Alignment.topRight : Alignment.topLeft),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(20),
+                                                color: (snapshot.data[reversedIndex].toString().startsWith('${user?.uid.substring(0,5)}') ? Colors.grey.shade200 : Colors.blue[200]),
+                                              ),
+                                              padding: EdgeInsets.all(16),
+                                              child: snapshot.data[reversedIndex].toString().startsWith('image') ?
+                                              Container(
+                                                child: Image.network(
+                                                  '${snapshot.data[reversedIndex]}',
+                                                  errorBuilder:  (context, error, stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black12,
+                                                      alignment: Alignment.center,
+                                                      child: const Text(
+                                                        'Whoops!, check your connection and try again',
+                                                        style: TextStyle(fontSize: 25),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ) : Text(snapshot.data[reversedIndex].toString().substring(5),
+                                                style: TextStyle(fontSize: 15),),
                                             ),
-                                          ) : Text(snapshot.data[reversedIndex].toString().substring(5),
-                                            style: TextStyle(fontSize: 15),),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            });
-                      }
-                    }
-                ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                });
+                          }
+                        }
+                    ),
+                  ),
+                ],
               ),
             ),
             Positioned(
@@ -144,7 +151,7 @@ class _ChatState extends State<Chat> {
                     return Container(
                       height: 52,
                       width: MediaQuery.of(context).size.width,
-                      color: Colors.lightGreen,
+                      color: Colors.grey,
                       child: Column(
                         children: [
                           SizedBox(
@@ -201,7 +208,7 @@ class _ChatState extends State<Chat> {
                                 print('${myController.text}');
 
                                 await DatabaseService(uid: user!.uid).updatechat(myController.text, chatID);
-                                await DatabaseService(uid: user!.uid).updateunread(chatID);
+                                // await DatabaseService(uid: user!.uid).updateunread(chatID);
                                 // await db.getmessages();
                                 setState(() => myController.text = ''
                                 );
@@ -220,13 +227,21 @@ class _ChatState extends State<Chat> {
                     );
                   }),
             ),
-            Card(
-              margin: EdgeInsets.zero,
-              color: Colors.black54.withOpacity(.6),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text('This chat is for people to share their jorney and experiences to maintain their weight',
-                  style:  TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w300),),
+            Container(
+              height: MediaQuery.of(context).size.height * .075,
+              child: Card(
+                margin: EdgeInsets.zero,
+                color: Colors.black54.withOpacity(.6),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(chatID =="weight maintain" ? 'This chat is for people to share their journey and experiences to maintain their weight':
+                    chatID =="weight loss" ? "This chat is for people to share their journey and experiences on the path to weight loss":
+                    chatID =="weight gain" ? "This chat is for people to share their journey and experiences on the path to gain weight":
+                    "This chat is a public chat group for people to share their journey and experiences on the path to a healthy lifestyle",
+                      style:  TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w300),),
+                  ),
+                ),
               ),
             ),
           ]

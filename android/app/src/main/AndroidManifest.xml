@@ -33,10 +33,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-       <service
+      <service
            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
            android:enabled="true"
-           android:exported="true"
+            android:exported="true"
            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
            <intent-filter>
                <action android:name="android.intent.action.BOOT_COMPLETED" />

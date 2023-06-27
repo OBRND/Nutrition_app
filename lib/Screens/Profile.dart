@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:gebeta/Model/Decorations.dart';
 import 'package:gebeta/Model/User.dart';
 import 'package:gebeta/Services/Database.dart';
+import 'package:gebeta/Services/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
@@ -19,6 +20,7 @@ class _ProfileState extends State<Profile> {
   String last = '';
   String phone = '';
   int i = 0;
+  String age = '';
   String error = '';
   List gender = ["Male","Female"];
   String weight = '';
@@ -28,6 +30,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserFB?>(context);
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -99,9 +102,7 @@ class _ProfileState extends State<Profile> {
                       FilteringTextInputFormatter.digitsOnly
                     ],
                     onChanged: (val){
-                      if (isphonevalid (val)) {
                         setState(() => phone = val);
-                      }
                     },
                     validator: (val) => isphonevalid(val!) ? null: 'Enter a valid phone number',
 
@@ -114,8 +115,8 @@ class _ProfileState extends State<Profile> {
                       FilteringTextInputFormatter.digitsOnly
                     ],
                     onChanged: (val){
-                      if (isphonevalid (val)) {
-                        setState(() => weight = val);
+                      {setState(() => weight = val);
+
                       }
                     },
                     validator: (val) => double.parse(val!) < 300  ? null: 'Enter a valid phone number',
@@ -129,21 +130,42 @@ class _ProfileState extends State<Profile> {
                       FilteringTextInputFormatter.digitsOnly
                     ],
                     onChanged: (val){
-                      if (isphonevalid (val)) {
-                        setState(() => height = val);
-                      }
+                      setState(() => height = val);
+
                     },
                     validator: (val) => double.parse(val!) < 300  ? null: 'Enter a valid phone number',
+
+                  ), TextFormField(
+                    decoration: textinputdecoration.copyWith(hintText: 'Your age'),
+                    // obscureText: true,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    onChanged: (val){
+                        setState(() => age = val);
+                    },
+                    validator: (val) => double.parse(val!) > 100 && double.parse(val) < 15 ? 'Only ages from 15 - 100 are accepted' : null,
 
                   ),
 
 
                   TextButton(
                       onPressed: () async{
-                        // if(_formkey.currentState!.validate()){
-                          //   setState(() => loading =
-                          // dynamic result = await DatabaseService(uid: user.uid).updateUserData(first,last, phone);
-                          // dynamic result = await _auth.registerWEP(email, password,First_name, Last_name, Phone_number);
+                        if(_formkey.currentState!.validate()){
+                        }
+                        print('Age: $age');
+                        print('Weight: $weight');
+                        print('Height: $height');
+
+                        await DatabaseService(uid: user!.uid).updateUserData(first,last, phone, select,
+                                int.parse(age), int.parse(weight), int.parse(height), 'unchanged');
+                        SnackBar snackBar = SnackBar(
+                          backgroundColor: Colors.black54.withOpacity(.6),
+                          content: Text('Succesfully edited', style:  TextStyle(color: Colors.white70, fontSize: 20, fontWeight: FontWeight.w400),),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Navigator.pop(context);
                         //   if(result == null){
                         //     setState((){error ='Success!';
                         //     });

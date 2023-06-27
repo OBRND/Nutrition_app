@@ -55,7 +55,7 @@ class NotificationHelper {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       'It\'s time to drink water!',
-      'After drinking, touch the cup to confirm',
+      'Make sure you drink enough water',
       _convertTime(hour, minutes),
       NotificationDetails(
         android: AndroidNotificationDetails(

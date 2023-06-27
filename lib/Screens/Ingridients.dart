@@ -7,10 +7,10 @@ class IngredientsPage extends StatefulWidget {
   String foodName = 'Enkulal';
   String imageURL = 'https://img.jamieoliver.com/jamieoliver/recipe-database/oldImages/large/576_1_1438868377.jpg?tr=w-800,h-1066';
   List<Ingredient> ingredients = [
-    Ingredient(name: 'eggs', calories: '20 cal', amount: '2 large'),
-    Ingredient(name: 'zeyet', calories: '50 cal', amount: '2 tea spoons'),
-    Ingredient(name: 'shenkurt', calories: '100 cal', amount: '2 medium'),
-    Ingredient(name: 'timatim', calories: '200 cal', amount: '3 medium'),
+    Ingredient(name: 'eggs', calories: '20 cal', amount: 200, measurement: '1 medium'),
+    Ingredient(name: 'zeyet', calories: '50 cal', amount: 150, measurement: '2 table spoons'),
+    Ingredient(name: 'shenkurt', calories: '100 cal', amount: 50, measurement: '1 large'),
+    Ingredient(name: 'timatim', calories: '200 cal', amount: 60, measurement: '1 large'),
   ];
   double totalCalories = 0;
 
@@ -46,16 +46,15 @@ class _IngredientsPageState extends State<IngredientsPage> {
     double calculatedCalories = 0;
     for(int i = 0; i < widget.ingredients.length ; i++){
 
-    String inputString = widget.ingredients[i].amount;
+    int inputString = widget.ingredients[i].amount;
     String calories = widget.ingredients[i].calories;
-    int indexOfSpace = inputString.indexOf(' ');
     int indexOfSpacecal = calories.indexOf(' ');
     String Stringcal = calories.substring(0, indexOfSpacecal);
-    String substring = inputString.substring(0, indexOfSpace);
+    String substring = inputString.toString();
 
     double amountsubed = double.parse(substring);
     double caloriesubed = double.parse(Stringcal);
-    calculatedCalories  = amountsubed * caloriesubed;
+    calculatedCalories  += amountsubed * caloriesubed;
     print(substring); // Output: "Hello"
     }
     setState(() {
@@ -167,7 +166,7 @@ class _IngredientsPageState extends State<IngredientsPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                widget.ingredients[0].amount == '1' ? widget.ingredients[index].calories.toString() : widget.ingredients[index].amount,
+                                widget.ingredients[0].amount == 0 ? widget.ingredients[index].calories.toString() : widget.ingredients[index].measurement.toString(),
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w500,
@@ -194,7 +193,8 @@ class _IngredientsPageState extends State<IngredientsPage> {
 class Ingredient {
   final String name;
   final String calories;
-  final String amount;
+  final int amount;
+  final String measurement;
 
-  Ingredient({required this.name, required this.calories, required this.amount});
+  Ingredient({required this.name, required this.calories, required this.amount, required this.measurement});
 }

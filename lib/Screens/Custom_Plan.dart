@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gebeta/Model/Recipee.dart';
 import 'package:gebeta/Model/User.dart';
 import 'package:gebeta/Screens/Ingridients.dart';
+import 'package:gebeta/Screens/Place_order/placeOrderPages.dart';
 import 'package:gebeta/Services/Database.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +49,7 @@ class _Custom_PlanState extends State<Custom_Plan> {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0, // Unique ID for each notification
       'Breakfast Time', // Notification title
-      'It\'s time for breakfast!', // Notification content
+      'Check out what\'s for breakfast!', // Notification content
       _nextInstanceOf(7, 0), // 7 AM
       platformChannelSpecifics,
       androidAllowWhileIdle: true, // Allow notification to be shown even if the device is in idle/doze mode
@@ -59,8 +61,8 @@ class _Custom_PlanState extends State<Custom_Plan> {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       1, // Unique ID for each notification
       'Lunch Time', // Notification title
-      'It\'s time for lunch!', // Notification content
-      _nextInstanceOf(13, 07 ), // 12 PM
+      'Check out what\'s for lunch!', // Notification content
+      _nextInstanceOf(12, 00 ), // 12 PM
       platformChannelSpecifics,
       androidAllowWhileIdle: true, // Allow notification to be shown even if the device is in idle/doze mode
       uiLocalNotificationDateInterpretation:
@@ -71,7 +73,7 @@ class _Custom_PlanState extends State<Custom_Plan> {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       2, // Unique ID for each notification
       'Dinner Time', // Notification title
-      'It\'s time for dinner!', // Notification content
+      'Check out what\'s for dinner!', // Notification content
       _nextInstanceOf(18, 00), // 6 PM
       platformChannelSpecifics,
       androidAllowWhileIdle: true, // Allow notification to be shown even if the device is in idle/doze mode
@@ -91,8 +93,12 @@ class _Custom_PlanState extends State<Custom_Plan> {
   }
 
   Future getPlan(user) async{
+
     int plandate = 0;
     plan = await DatabaseService(uid: user).getPlan();
+    if(plan.isNotEmpty){
+      scheduleNotifications();
+    }
     print(plan);
     print(DateFormat('dd/MM/yyyy').format(DateTime.now()));
     if(_selectedIndex == DateTime.now().weekday - 1){
@@ -124,6 +130,7 @@ class _Custom_PlanState extends State<Custom_Plan> {
     String selectedDateFormat = DateFormat('dd/MM/yyyy').format(selectedDate);
     List<Recipee> updatedPlan = [];
 
+
     for (var element in plan) {
       if (element['date'] == selectedDateFormat) {
         print(element['breakfast']);
@@ -141,13 +148,13 @@ class _Custom_PlanState extends State<Custom_Plan> {
     // Update the meal plan with the updatedPlan
     setState(() {
       selected = updatedPlan;
+      print(selected);
     });
     return updatedPlan;
   }
 
   @override
   void initState() {
-    scheduleNotifications();
     // NotificationHelper().scheduledNotification(hour: 9, minutes: 57, id: 01);
     super.initState();
   }
@@ -202,64 +209,66 @@ class _Custom_PlanState extends State<Custom_Plan> {
                 ),
               ),
             ),
-            Container(
-              height: 62,
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: _daysOfWeek.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async{
-                      _selectedIndex = index;
-                      await updateMealPlan(user.uid);
-                      setState(() {
-                        // _selectedIndex = index;
-                      });
-                    },
-                    child: Container(
-                      width: 50,
-                      margin: EdgeInsets.symmetric(horizontal: 3),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: index == _selectedIndex ? Colors
-                            .lightGreen : Colors
-                            .grey[200],
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Center(
-                        child: Column(
-                            children: [
-                              Text(weekDays[index].day.toString(),
-                                style: TextStyle(fontSize: 20,
-                                  fontWeight: index == _selectedIndex
-                                      ? FontWeight.bold
-                                      : FontWeight.w300,
-                                  color: index == _selectedIndex
-                                      ? Colors.white
-                                      : Colors.black,
-                                ),),
-                              // Text( index < _selectedIndex && _selectedDate + index < 31 && _selectedDate + index > 0 ? (_selectedDate - _selectedIndex).toString():
-                              // index > _selectedIndex && _selectedDate + index < 31 ? (_selectedDate + index).toString() :
-                              // _selectedDate + index == 31 ? '0' : _selectedDate.toString() ),
-                              Text(
-                                _daysOfWeek[index],
-                                style: TextStyle(fontSize: 12,
-                                  fontWeight: index == _selectedIndex
-                                      ? FontWeight.bold
-                                      : FontWeight.w300,
-                                  color: index == _selectedIndex
-                                      ? Colors.white
-                                      : Colors.black,
+            Center(
+              child: Container(
+                height: 62,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _daysOfWeek.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () async{
+                        _selectedIndex = index;
+                        await updateMealPlan(user.uid);
+                        setState(() {
+                          // _selectedIndex = index;
+                        });
+                      },
+                      child: Container(
+                        width: 50,
+                        margin: EdgeInsets.symmetric(horizontal: 3),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: index == _selectedIndex ? Colors
+                              .lightGreen : Colors
+                              .grey[200],
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Center(
+                          child: Column(
+                              children: [
+                                Text(weekDays[index].day.toString(),
+                                  style: TextStyle(fontSize: 20,
+                                    fontWeight: index == _selectedIndex
+                                        ? FontWeight.bold
+                                        : FontWeight.w300,
+                                    color: index == _selectedIndex
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),),
+                                // Text( index < _selectedIndex && _selectedDate + index < 31 && _selectedDate + index > 0 ? (_selectedDate - _selectedIndex).toString():
+                                // index > _selectedIndex && _selectedDate + index < 31 ? (_selectedDate + index).toString() :
+                                // _selectedDate + index == 31 ? '0' : _selectedDate.toString() ),
+                                Text(
+                                  _daysOfWeek[index],
+                                  style: TextStyle(fontSize: 12,
+                                    fontWeight: index == _selectedIndex
+                                        ? FontWeight.bold
+                                        : FontWeight.w300,
+                                    color: index == _selectedIndex
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                 ),
-                              ),
-                            ]
+                              ]
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
             Center(
@@ -279,6 +288,39 @@ class _Custom_PlanState extends State<Custom_Plan> {
                         );
                     // case (ConnectionState.done) :
                       default:
+                        if(selected.isEmpty){
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height * .2, 30, 0),
+                            child: Column(
+                              children: [
+                                Text('You have no planned meals for this date. '
+                                    'If you haven\'t already, you can place an order by tapping the button below',
+                                  style: TextStyle(fontSize: 18,
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.w400),
+                                textAlign: TextAlign.justify,),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => PlaceOrder()));
+                                  },
+                                  child: Text(
+                                    'Place order',
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    primary: Colors.brown,
+                                    padding: EdgeInsets.symmetric(horizontal: 50),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );}
+                      else {
                         return
                           Container(
                             child: Column(
@@ -301,9 +343,10 @@ class _Custom_PlanState extends State<Custom_Plan> {
                                           print(selected[0].ingredients[i]['Measurement']);
                                           ingredientList.add(
                                             Ingredient(
-                                                name: selected[0].ingredients[i]['label'],
+                                                name: selected[0].ingredients[i]['id'],
                                                 calories: selected[0].ingredients[i]['calories'],
-                                                amount: selected[0].ingredients[i]['Measurement']),
+                                                amount: selected[0].ingredients[i]['amount'],
+                                                measurement: selected[0].ingredients[i]['Measurement']),
                                           );
                                         }
                                         print('----------------');
@@ -347,7 +390,7 @@ class _Custom_PlanState extends State<Custom_Plan> {
                                                             borderRadius: BorderRadius.only(
                                                                 topLeft: Radius.circular(10),
                                                                 bottomLeft: Radius.circular(10)),
-                                                            child: Image.network('selected[0].imageURL',
+                                                            child: Image.network(selected[0].imageURL,
                                                               fit: BoxFit.fitWidth,))),
                                                     Container(
                                                       height: 80,
@@ -410,9 +453,10 @@ class _Custom_PlanState extends State<Custom_Plan> {
                                           print(selected[1].ingredients[i]['Measurement']);
                                           ingredientList.add(
                                             Ingredient(
-                                                name: selected[1].ingredients[i]['label'],
+                                                name: selected[1].ingredients[i]['id'],
                                                 calories: selected[1].ingredients[i]['calories'],
-                                                amount: selected[1].ingredients[i]['Measurement']),
+                                                amount: selected[1].ingredients[i]['amount'],
+                                                measurement: selected[1].ingredients[i]['Measurement']),
                                           );
                                         }
                                         Navigator.of(context).push(
@@ -513,12 +557,13 @@ class _Custom_PlanState extends State<Custom_Plan> {
                                       onTap: () {
                                         List<Ingredient> ingredientList = [];
                                         for (int i = 0; i < selected[2].ingredients.length; i++) {
-                                          print(selected[2].ingredients[i]['Measurement']);
+                                          // print(selected[2].ingredients[i]['Measurement']);
                                           ingredientList.add(
                                             Ingredient(
-                                                name: selected[2].ingredients[i]['label'],
+                                                name: selected[2].ingredients[i]['id'],
                                                 calories: selected[2].ingredients[i]['calories'],
-                                                amount: selected[2].ingredients[i]['Measurement']),
+                                                amount: selected[2].ingredients[i]['amount'],
+                                                measurement: selected[2].ingredients[i]['Measurement']),
                                           );
                                         }
                                         Navigator.of(context).push(
@@ -610,6 +655,7 @@ class _Custom_PlanState extends State<Custom_Plan> {
                               ],
                             ),
                           );
+                      }
                     }
                   }
               ),

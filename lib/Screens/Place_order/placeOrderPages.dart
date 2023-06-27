@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:gebeta/Model/Payment.dart';
 import 'package:gebeta/Model/User.dart';
+import 'package:gebeta/Screens/Wrapper.dart';
 import 'package:gebeta/Screens/bottomNav.dart';
 import 'package:gebeta/Services/Database.dart';
 import 'package:http/http.dart' as http;
@@ -110,12 +111,12 @@ class _PlaceOrderState extends State<PlaceOrder> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
           Icon(Icons.radio_button_checked, color: Colors.green,),
-          Text('----------', style: TextStyle(color: page == 0 ? Colors.grey : Colors.green),),
-          Icon(page == 0 ? Icons.radio_button_unchecked : Icons.radio_button_checked,
-            color: page == 0 ? Colors.grey : Colors.green,),
-          Text('----------', style: TextStyle(color: page == 0 || page == 1 ? Colors.grey : Colors.green),),
-          Icon(page == 0 || page == 1 ? Icons.radio_button_unchecked : Icons.radio_button_checked,
-            color: page == 0 || page == 1 ? Colors.grey : Colors.green,),
+            Text('----------', style: TextStyle(color: page == 0 ? Colors.grey : Colors.green),),
+            Icon(page == 0 ? Icons.radio_button_unchecked : Icons.radio_button_checked,
+              color: page == 0 ? Colors.grey : Colors.green,),
+            Text('----------', style: TextStyle(color: page == 0 || page == 1 ? Colors.grey : Colors.green),),
+            Icon(page == 0 || page == 1 ? Icons.radio_button_unchecked : Icons.radio_button_checked,
+              color: page == 0 || page == 1 ? Colors.grey : Colors.green,),
         ],),
       ),
       body:
@@ -410,7 +411,6 @@ class _PlaceOrderState extends State<PlaceOrder> {
             ],
           ),
         ),
-
       ) :
       Center(
         child: Column(
@@ -564,7 +564,7 @@ class _PlaceOrderState extends State<PlaceOrder> {
                   taped = false;
                 });
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => BottomTab(index: 1)));
+                    builder: (context) => wrapper()));
               }
             }
              if(page != 2){
@@ -631,22 +631,30 @@ class _PlaceOrderState extends State<PlaceOrder> {
     );
   }
 int amount = 0;
+
   Paydartchappa(firstName, lastName, phoneNumber) async{
     setState((){
       txRef = generatetxRef();
     });
-    if(_selectedContract.toString().substring(9) == "Basic") setState(() => amount = 800);
-    if(_selectedContract.toString().substring(9) == "Standard") setState(() => amount = 2200);
-    if(_selectedContract.toString().substring(9) == "Premium") setState(() => amount = 4000);
+    if(_selectedContract.toString().substring(9) == "basic") {
+      setState(() => amount = 800);
+    }
+    if(_selectedContract.toString().substring(9) == "standard") {
+      setState(() => amount = 2200);
+    }
+    if(_selectedContract.toString().substring(9) == "premium") {
+      setState(() => amount = 4000);
+    }
+    print(_selectedContract.toString().substring(9));
     var headers = {
       'Authorization': 'Bearer CHASECK_TEST-vCHsrkKC3ZThcyPZ6dXsH254LmqNK5u6',
       'Content-Type': 'application/json'
     };
     var request = http.Request('POST', Uri.parse('https://api.chapa.co/v1/transaction/mobile-initialize'));
     request.body = json.encode({
-      "amount":(_selectedContract.toString().substring(9) == "Basic") ? "800": _selectedContract.toString().substring(9) == "Standard" ? "2200" : "4000",
+      "amount": "$amount",
       "currency": "ETB",
-      "email": "example@gmail.com",
+      "email": "hiwotu92@gmail.com",
       "first_name": "${firstName}",
       "last_name": "${lastName}",
       "phone_number": "${phoneNumber}",

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gebeta/Screens/Home.dart';
+import 'package:gebeta/Screens/Naviagtion/About%20us.dart';
 import 'package:gebeta/Screens/Naviagtion/ChatGroups.dart';
+import 'package:gebeta/Screens/Naviagtion/feedback.dart';
 import 'package:gebeta/Screens/Orders.dart';
 import 'package:gebeta/Screens/Profile.dart';
 import 'package:gebeta/Screens/Progress.dart';
 import 'package:gebeta/Services/Auth.dart';
+import 'package:gebeta/Services/user_provider.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 import 'Custom_Plan.dart';
 
@@ -39,6 +43,8 @@ class _BottomTabState extends State<BottomTab> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final subscription = userProvider.subscription;
     return Scaffold(
         appBar: AppBar(
             leading: Padding(
@@ -85,16 +91,15 @@ class _BottomTabState extends State<BottomTab> {
             actions: <Widget>[
               PopupMenuButton<String>(
                 onSelected: (String result) {
-
                 },
                 itemBuilder: (BuildContext context) =>
                 <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
-                    value: 'chat room',
+                    value: 'Chat room',
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Chat(chatID: 'weight maintain',)));
+                            builder: (context) => Chat(chatID: subscription!,)));
                       },
                       child: Text('Chat room',
                         style: TextStyle(color: Colors.black54,
@@ -103,13 +108,38 @@ class _BottomTabState extends State<BottomTab> {
                     ),
                   ),
                   PopupMenuItem<String>(
-                    value: 'orders',
+                    value: 'Orders',
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => Orders(),));
                       },
                       child: Text('Orders',
+                        style: TextStyle(color: Colors.black54,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500),),
+                    ),
+                  ),PopupMenuItem<String>(
+                    value: 'Feedback',
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => feedback(),));
+                      },
+                      child: Text('Feedback',
+                        style: TextStyle(color: Colors.black54,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500),),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'About Gebeta',
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => About_us(),));
+                      },
+                      child: Text('About Gebeta',
                         style: TextStyle(color: Colors.black54,
                             fontSize: 18,
                             fontWeight: FontWeight.w500),),
@@ -135,36 +165,6 @@ class _BottomTabState extends State<BottomTab> {
                   ),
                 ],)
             ]),
-        drawer: Drawer(
-
-          child: Container(
-            width: 100,
-            height: 200, // set the width of the drawer here
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  child: Text('Gebeta Nutrition'),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                  ),
-                ),
-                ListTile(
-                  title: Text('Item 1'),
-                  onTap: () {
-                    // do something
-                  },
-                ),
-                ListTile(
-                  title: Text('Item 2'),
-                  onTap: () {
-                    // do something
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
         body: Center(
           child: _widgetOptions.elementAt(selectedIndex),
         ),

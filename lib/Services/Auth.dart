@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gebeta/Model/User.dart';
+import 'package:gebeta/Screens/Wrapper.dart';
 import 'Database.dart';
 
 class Auth_service {
@@ -17,16 +19,16 @@ class Auth_service {
     return _auth.authStateChanges().map(userFromFirebase);
   }
 
-  Future registerWEP(String email, String password,String First_name,String Last_name,String Phone_number, context) async {
+  Future registerWEP(String email, String password,String First_name,String Last_name,String Phone_number, context, selectedPlan) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
       //create a new document for the user with uid
-      await DatabaseService(uid: user!.uid).updateUserData(First_name,Last_name, Phone_number);
+      await DatabaseService(uid: user!.uid).updateUserData(First_name,Last_name, Phone_number,0,0,0,0, selectedPlan);
       // ProfileState().user(user!.uid);
       // DatabaseService(uid:user!.uid).getuserInfo(user!.uid);
-      Navigator.pushReplacementNamed(context, '/place');
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => wrapper()));
 
       // return userFromFirebase(user);
     } catch (e) {
@@ -40,6 +42,7 @@ class Auth_service {
     try{ await _auth.sendPasswordResetEmail(email: email);
     }
     catch(error){}}
+
   Future Signin_WEP(email, password) async {
     try {
       // await Firebase.initializeApp();

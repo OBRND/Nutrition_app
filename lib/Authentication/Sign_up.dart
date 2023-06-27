@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:gebeta/Authentication/Sign_in.dart';
 import 'package:gebeta/Model/Decorations.dart';
 import 'package:gebeta/Services/Auth.dart';
+import 'package:gebeta/Services/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class Sign_up extends StatefulWidget {
   // const Sign_up({Key? key}) : super(key: key);
@@ -23,6 +25,35 @@ class _Sign_upState extends State<Sign_up> {
   String Phone_number = '';
   String error ="";
   String Ctrycode = '';
+  List<DropdownMenuItem<String>> menuItems = [
+    DropdownMenuItem(child: Text("Weight Loss"),value: "0"),
+    DropdownMenuItem(child: Text("Weight Maintain"),value: "1"),
+    DropdownMenuItem(child: Text("Weight Gain"),value: "2"),
+  ];
+  String selectedValue = "0";
+  void signUpAndLoadUserData() async {
+    if (_formKey.currentState!.validate()) {
+      dynamic userId = await _auth.registerWEP(
+        email,
+        password,
+        First_name,
+        Last_name,
+        (Ctrycode + Phone_number),
+        context,
+        selectedValue,
+      );
+      if (userId != null) {
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        await userProvider.loadUserData();
+        Navigator.pushReplacementNamed(context, '/place');
+      } else {
+        setState(() {
+          error = 'please supply a valid email';
+        });
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +152,24 @@ class _Sign_upState extends State<Sign_up> {
                         ],
                       ),
                       SizedBox( height: 10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('What is your prefered plan for you profile'),
+                          DropdownButton(
+                              iconSize: 25,
+                              value: selectedValue,
+                              onChanged: (String? newValue){
+                                setState(() {
+                                  selectedValue = newValue!;
+                                });
+                              },
+                              items: menuItems
+                          ),
+                        ],
+                      ),
+                      SizedBox( height: 10),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               shape:
@@ -134,7 +183,7 @@ class _Sign_upState extends State<Sign_up> {
                           onPressed: () async{
                             if(_formKey.currentState!.validate()){
                               //   setState(() => loading = true);
-                              dynamic result = await _auth.registerWEP(email, password,First_name, Last_name, (Ctrycode + Phone_number), context);
+                              dynamic result = await _auth.registerWEP(email, password,First_name, Last_name, (Ctrycode + Phone_number), context, selectedValue);
                               if(result == null){
                                 setState((){ error ='please supply a valid email';
                                   //     loading = false;

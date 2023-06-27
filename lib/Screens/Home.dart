@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gebeta/Model/User.dart';
 import 'package:gebeta/Screens/Ingridients.dart';
 import 'package:gebeta/Screens/Place_order/placeOrderPages.dart';
 import 'package:gebeta/Services/Database.dart';
+import 'package:gebeta/Services/user_provider.dart';
+import 'package:gebeta/main.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -22,14 +25,12 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserFB?>(context);
-
     return Scaffold(
       body: ListView(
         children: [
@@ -99,126 +100,113 @@ class _HomeState extends State<Home> {
         ],
       ),
       // floatingActionButton: FloatingActionButton(
-      //   onPressed: (){
-      //     DatabaseService(uid: user!.uid).getdata();
-      //   },
-      // ),
+      //       //   onPressed: (){
+      //       //     DatabaseService(uid: user!.uid).getdata();
+      //       //   },
+      //       // ),
     );
 
   }
 
   Widget defaultmeals(String uid) {
-    return Column(
-      children: [
-        Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text('Breakfast',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black54),),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * .15,
-                  child:
-                  FutureBuilder(
-                    future: DatabaseService(uid: uid).getdata(),
-                      builder: (context,AsyncSnapshot snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.waiting:
-                            return Center(
-                              child: Text('Loading contents...',
-                                style: TextStyle(fontSize: 16,
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.w300),),
-                            );
-                        // case (ConnectionState.done) :
-                          default: return getimages(snapshot.data[0]);
-                        }
-                      }
-                  )
-                )
-              ],
-            )
-        ),
-        Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text('Lunch', style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54),),
-                ),
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * .15,
-                    child:
-                    FutureBuilder(
-                        future: DatabaseService(uid: uid).getdata(),
-                        builder: (context,AsyncSnapshot snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Center(
-                                child: Text('Loading contents...',
-                                  style: TextStyle(fontSize: 16,
-                                      color: Colors.grey[600],
-                                      fontWeight: FontWeight.w300),),
-                              );
-                          // case (ConnectionState.done) :
-                            default: return getimages(snapshot.data[1]);
-                          }
-                        }
+    final userProvider = Provider.of<UserProvider>(context);
+    final subscription = userProvider.subscription;
+    return FutureBuilder(
+        future: DatabaseService(uid: uid).getdata(subscription!),
+    builder: (context,AsyncSnapshot snapshot) {
+    switch (snapshot.connectionState) {
+      case ConnectionState.waiting:
+        return Center(
+          child: Text('Loading contents...',
+            style: TextStyle(fontSize: 16,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w300),),
+        );
+    // case (ConnectionState.done) :
+      default: return Column(
+          children: [
+            Card(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text('Breakfast',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54),),
+                    ),
+                    Container(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height * .15,
+                        child: getimages(snapshot.data[0]),
                     )
+                  ],
                 )
-              ],
-            )
-        ),
-        Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text('Dinner', style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54),),
-                ),
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * .15,
-                    child:
-                    FutureBuilder(
-                        future: DatabaseService(uid: uid).getdata(),
-                        builder: (context,AsyncSnapshot snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Center(
-                                child: Text('Loading contents...',
-                                  style: TextStyle(fontSize: 16,
-                                      color: Colors.grey[600],
-                                      fontWeight: FontWeight.w300),),
-                              );
-                          // case (ConnectionState.done) :
-                            default: return getimages(snapshot.data[2]);
-                          }
-                        }
+            ),
+            Card(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text('Lunch', style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54),),
+                    ),
+                    Container(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height * .15,
+                        child: getimages(snapshot.data[1]),
                     )
+                  ],
                 )
-              ],
-            )
-        ),
-      ],
+            ),
+            Card(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text('Dinner', style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54),),
+                    ),
+                    Container(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height * .15,
+                        child: getimages(snapshot.data[2])
+                    )
+                  ],
+                )
+            ),
+          ],
+        );
+    }
+        }
     );
   }
 
@@ -235,7 +223,7 @@ class _HomeState extends State<Home> {
             List<Ingredient> ingred = [];
             for(int i = 0; i <data[index]["ingredients"].length; i++ ){
               ingred.add(
-                Ingredient(name: data[index]["ingredients"][i]['name'], calories: (data[index]["ingredients"][i]['calories'].toString() +' cal'), amount: '1'),
+                Ingredient(name: data[index]["ingredients"][i]['name'], calories: (data[index]["ingredients"][i]['calories'].toString() +' cal'), amount: 0, measurement: ''),
               );
             }
 
