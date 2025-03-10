@@ -39,7 +39,7 @@ Gebeta Nutrition offers an extensive range of features to support users in their
 
 | Recipe Details        | Community Chat        | Payment Page           |
 | ---------------------- | ---------------------- | ---------------------- |
-| ![Recipes](Screenshots/RecipeDetails.jpg) | ![Chat](Screenshots/Chat.jpg) | ![Payment](Screenshots/Payment.jpg) |
+| ![Recipes](Screenshots/RecipeDetails.png) | ![Chat](Screenshots/Chat.jpg) | ![Payment](Screenshots/Payment.jpg) |
 
 ## Acknowledgements
 - Special thanks to **Chapa API** for enabling seamless **subscription-based payments** within the app.
